@@ -1,0 +1,325 @@
+return {
+    name = "Storm Knight",
+
+    guidNames = { ["3ca3a1"] =  "Storm Knight Archive" },
+
+    components = {
+        ["Rare Gear"] = "Storm Knight Rare Gear",
+        ["Strange Resources"] = "Metal Face",
+        ["Disorders"] = "Storm Knight Disorders",
+        ["Terrain"] = "Storm Knight Terrain",
+        ["Terrain Tiles"] = { "Lightning Rod", "Forsaken Fog" },
+        ["Secret Fighting Arts"] = "Storm Knight Secret Fighting Arts",
+        ["Settlement Events"] = "Storm Knight Settlement Events",
+        ["Tactics"] = "Storm Knight Tactics",
+        ["Innovations"] = "Rain Cloud Pipe",
+        ["Armor Sets"] = "Michishio Armor",
+    },
+
+    settlementEvents = {
+        "Wandering Master",
+        "Beats Of The Hammer",
+    },
+
+    removeTimelineEvent = { year = 11, name = "Regal Visit" },
+    replaceNemesis = { nemesis = "The Hand", replacement = "Storm Knight" },
+    timelineEvents = {
+        { year = 11, name = "Looming Storm", type = "RulebookEvent" },
+    },
+
+    
+    terrain = {
+        ["2 Lightning Rods"] = { terrainTile = "Lightning Rod", count = 2 },
+        ["Forsaken Fog"] = { terrainTile = "Forsaken Fog", count = 1 },
+    },
+
+    terrainTileSizes = {
+        ["Lightning Rod"] = { x = 1, y = 1 },
+        ["Forsaken Fog"] = { x = 2, y = 2 },
+    },
+
+    armorStats = {
+        ["Michishio Armor"]  = { head = 1, arms = 1, body = 1, waist = 1, legs = 1, modifier = true },
+        ["Storm Helmet"]     = { head = 5, arms = 0, body = 0, waist = 0, legs = 0 },
+        ["Storm Mantle"]     = { head = 0, arms = 1, body = 1, waist = 0, legs = 0 },
+        ["Mist Raven Obi"]   = { head = 0, arms = 0, body = 0, waist = 4, legs = 0 },
+    },
+
+    weaponStats = {
+        ["Lightning Rod"]    = { speed = 2, accuracy = 6, strength = 6 },
+        ["Inazuma"]          = { speed = 4, accuracy = 4, strength = 0 },
+        ["Fulgurite Stone"]  = { speed = 2, accuracy = 7, strength = 1 },
+        ["Bone Katana"]   = { speed = 3, accuracy = 6, strength = 3, deadly = 1 },
+    },
+
+
+    rulebooks = {
+        {
+            name = "Storm Knight Rules",
+            pages = {
+                ["Storm Knight Rules"] = {
+                    keywords = {"Storm", "Knight", "Rules"},
+                    state = 1,
+                },
+                ["Looming Storm"] = {
+                    keywords = {"Looming", "Storm"},
+                    state = 2,
+                    timelineEvent = true,
+                },
+                ["Showdown: Storm Knight"] = {
+                    keywords = {"Showndown:", "Storm", "Knight"},
+                    state = 3,
+                    showdown = true,
+                },
+                ["Aftermath"] = {
+                    keywords = {"Aftermath"},
+                    state = 4,
+                },
+                ["Ill-Fated Circumstance"] = {
+                    keywords = {"Ill", "Fated", "Circumstance"},
+                    state = 5,
+                    timelineEvent = true,
+                },
+                ["Rise to the Challenge"] = {
+                    keywords = {"Rise", "to", "the", "Challenge"},
+                    state = 6,
+                    timelineEvent = true,
+                },
+                ["Showdown: Storm Knight Level 3"] = {
+                    keywords = {"Showdown:", "Storm", "Knight", "Level", "3"},
+                    state = 7,
+                    showdown = true,
+                },
+                ["Storm Break"] = {
+                    keywords = { "Storm", "Break"},
+                    state = 8,
+                },
+                ["Storm Dancer Rules"] = {
+                    keywords = { "Storm", "Dancer", "Rules" },
+                    state = 9,
+                },
+                ["Showdown: Storm Dancer"] = {
+                    keywords = { "Showdown", "Storm", "Dancer" },
+                    state = 10,
+                    showdown = true,
+                },
+            },
+        },
+    },
+
+    archiveEntries = {
+        archive = "Storm Knight Archive",
+        entries = {
+            { "Storm Knight Rules", "Rulebook" },
+            { "Storm Knight Rare Gear", "Gear" },
+            { "Storm Knight", "Monster Figurine" },
+            { "Metal Face", "Strange Resources" },
+            { "Storm Knight Hit Locations", "Hit Locations" },
+            { "Storm Knight Disorders", "Disorders" },
+            { "Storm Knight Secret Fighting Arts", "Secret Fighting Arts" },
+            { "Storm Knight Settlement Events", "Settlement Events" },
+            { "Storm Knight Tactics", "Tactics"},
+
+            { "Storm Knight Terrain", "Terrain"},
+            { "Lightning Rod", "Terrain Tiles" },
+            { "Forsaken Fog", "Terrain Tiles" },
+            
+            { "Storm Knight Special AI", "AI" },
+            { "Storm Knight Info", "AI" },
+            { "Storm Knight Basic Action", "AI" },
+            { "Storm Knight Basic AI", "AI" },
+            { "Storm Knight Advanced AI", "AI" },
+            { "Storm Knight Legendary AI", "AI" },
+
+            { "Storm Dancer Resources", "Monster Resources" },
+            { "Storm Dancer Special AI", "AI" },
+            { "Storm Dancer Info", "AI" },
+            { "Storm Dancer Basic Action", "AI" },
+            { "Storm Dancer Basic AI", "AI" },
+            { "Storm Dancer Advanced AI", "AI" },
+            { "Storm Dancer Legendary AI", "AI" },
+            { "Storm Dancer Hit Locations", "Hit Locations" },
+            { "Storm Dancer", "Monster Figurine" },
+            { "Rain Cloud Pipe", "Innovations" },
+            { "Michishio Armor", "Armor Sets" },
+        },
+    },
+
+    monsters = {
+        {
+            name = "Storm Knight",
+            nemesis = true,
+            size = { x = 2, y = 2 },
+            rules = { "Storm Knight Rules", 3 },
+            resourcesDeck = false,
+            position = "(11.5, 8.5)",
+            playerPositions = { "(10, 16)", "(11, 16)", "(12, 16)", "(13, 16)" },
+            playerRotations = { { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 } },
+            levels = {
+                {
+                    name = "Level 1",
+                    level = 1,
+                    showdown = {
+                        basic = 8,
+                        advanced = 2,
+                        movement = 8,
+                        toughness = 11,
+                        starting = {
+                            special = { "Charged", "Cloud Walk", "Static Shield", "Stormy Temper", "Electrical Current" }
+                        },
+                        fixedTerrain = {
+                            {
+                                terrain = "3 Stone Columns",
+                                positions = { "(7, 8.5)", "(11.5, 4)", "(16, 8.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 180, z= 0 } },
+                            },
+                        },
+
+                    },
+                },
+                {
+                    name = "Level 2",
+                    level = 2,
+                    showdown = {
+                        basic = 11,
+                        advanced = 4,
+                        movement = 8,
+                        toughness = 14,
+                        speed = 1,
+                        damage = 1,
+                        accuracy = 1,
+                        luck = 1,
+                        starting = {
+                            special = { "Charged", "Cloud Walk", "Static Shield", "Stormy Temper", "Electrical Current" }
+                        },
+                        fixedTerrain = {
+                            {
+                                terrain   = "Bug Patch",
+                                positions = { "(12, 3)" },
+                                rotations = { { x = 0, y = 180, z = 0 } },
+                            },
+                            {
+                                terrain   = "2 Acanthus Plants",
+                                positions = { "(6, 8)", "(17, 8)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 } },
+                            },
+                            {
+                                terrain   = "3 Stone Columns",
+                                positions = { "(7, 8.5)", "(11.5, 4)", "(16, 8.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 180, z= 0 } },
+                            },
+                            {
+                                terrain  = "Forsaken Fog",
+                                position = "(11.5, 8.5)",
+                                rotation = { x = 0, y = 0, z = 0 },
+                            },
+
+                        },
+                        
+                    },
+                },
+                {
+                    name = "Level 3",
+                    level = 3,
+                    showdown = {
+                        basic = 11,
+                        advanced = 7,
+                        legendary = 3,
+                        movement = 10,
+                        toughness = 16,
+                        speed = 2,
+                        damage = 2,
+                        accuracy = 3,
+                        luck = 2,
+                        starting = {
+                            special = { "Charged", "Three Faced", "Cloud Walk", "Static Shield", "Stormy Temper", "Electrical Current", "Storm Clouds" },
+                        },
+                        fixedTerrain = {
+
+                            {
+                                terrain = "Toppled Pillar",
+                                positions = { "(7, 8.5)", "(16, 8.5)" },
+                                rotations = { { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 } },
+                            },
+
+                            {
+                                terrain   = "2 Lightning Rods",
+                                positions = { "(7, 6)", "(16, 6)" }, 
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 } },
+
+                            },
+
+                            {
+                                terrain   = "2 Lightning Rods",
+                                positions = { "(7, 11)", "(16, 11)" }, 
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 } },
+
+                            },
+            
+                            {
+                                terrain  = "Forsaken Fog",
+                                position = "(11.5, 8.5)",
+                                rotation = { x = 0, y = 0, z = 0 },
+                            },
+                        
+                        },
+                        
+                    },
+                },
+            },
+        },
+        {
+            name = "Storm Dancer",
+            nemesis = true,
+            size = { x = 2, y = 2 },
+            rules = { "Storm Knight Rules", 10 },
+            position = "(11.5, 8.5)",
+            playerPositions = { "(10, 16)", "(11, 16)", "(12, 16)", "(13, 16)" },
+            playerRotations = { { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 } },
+            levels = {
+                {
+                    name = "Level 4",
+                    level = 4,
+                    showdown = {
+                        basic = 7,
+                        advanced = 7,
+                        legendary = 4,
+                        movement = 13,
+                        toughness = 16,
+                        speed = 4,
+                        damage = 3,
+                        evasion = 2,
+                        accuracy = 3,
+                        luck = 3,
+                        starting = {
+                            special = { "Charged", "Spirited Away", "Hook And Reel", "Stormy Temper", "Static Shawl", "Total Eclipse", "Internal Toxicity", "Corrosive Venom", "Noxious Waltz" }
+                        },
+                        fixedTerrain = {
+                            {
+                                terrain = "Hovel",
+                                positions = { "(6.5, 6.5)", "(16.5, 6.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 } },
+                            },
+                            {
+                                terrain = "2 Cowering Survivors",
+                                positions = { "(6, 5)", "(17, 5)"},
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 }},
+                            },
+                            {
+                                terrain  = "Forsaken Fog",
+                                position = "(11.5, 8.5)",
+                                rotation = { x = 0, y = 0, z = 0 },
+                            },
+                        },
+                    },
+
+                },
+            }, 
+      
+        },
+    },
+    --Fix Storm Dancer Info card
+}
+
+
+    

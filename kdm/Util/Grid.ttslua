@@ -1,0 +1,110 @@
+local Check = require("Kdm/Util/Check")
+
+---------------------------------------------------------------------------------------------------
+
+local GridClass = {}
+GridClass.__index = GridClass
+
+---------------------------------------------------------------------------------------------------
+
+function GridClass.Create(params)
+    local object, left, right, top, bottom, cols, rows = params.object, params.left, params.right, params.top, params.bottom, params.cols, params.rows
+    assert(Check.Object(object))
+    assert(Check.Num(left))
+    assert(Check.Num(right))
+    assert(Check.Num(top))
+    assert(Check.Num(bottom))
+    assert(Check.Num(cols))
+    assert(Check.Num(rows))
+
+    local grid = {
+        object = object,
+
+        left = left,
+        right = right,
+        top = top,
+        bottom = bottom,
+
+        cols = cols,
+        rows = rows,
+
+        colSize = (right - left) / (cols - 1),
+        rowSize = (bottom - top) / (rows - 1),
+    }
+    setmetatable(grid, GridClass)
+
+    return grid
+end
+
+
+---------------------------------------------------------------------------------------------------
+
+function GridClass:Cols() return self.cols end
+function GridClass:Rows() return self.rows end
+function GridClass:Object() return self.object end
+
+---------------------------------------------------------------------------------------------------
+
+function GridClass:ColRow(position)
+    local col = (position.x - self.left) / self.colSize
+    local row = (position.z - self.top) / self.rowSize
+    return col, row
+end
+
+---------------------------------------------------------------------------------------------------
+
+function GridClass:XZ(col, row)
+    local x = self.left + (col * self.colSize)
+    local z = self.top + (row * self.rowSize)
+    return x, z
+end
+
+---------------------------------------------------------------------------------------------------
+
+function GridClass:Snap(object, size)
+    assert(Check.Object(object))
+    assert(Check.Vec2(size))
+
+    local width, height = size.x, size.y
+
+    local y = object.getRotation().y
+    -- sideways = swap width/height
+    if (y > 45 and y < 135) or (y > 225 and y < 315) then
+        width, height = height, width
+    end
+
+    local wpos = object.getPosition()
+    local lpos = self.object.positionToLocal(wpos)
+    local col, row = self:ColRow(lpos)
+
+    -- even size, snap to grid intersections (0.5, 1.5, 2.5, ...)
+    -- odd size, snap to grid cell centers (1.0, 2.0, 3.0, ...)
+    local snapCol = (width % 2 == 0) and math.floor(col) + 0.5 or math.floor(col + 0.5)
+    local snapRow = (height % 2 == 0) and math.floor(row) + 0.5 or math.floor(row + 0.5)
+
+    local epsilon = 0.001
+    local wradius = width / 2
+    local hradius = height / 2
+    if
+        (snapCol - wradius) < -0.5 - epsilon or
+        (snapCol + wradius) >= self.cols + epsilon or
+        (snapRow - hradius) < -0.5 - epsilon or
+        (snapRow + hradius) >= self.rows + epsilon then
+        return wpos
+    end
+
+    local snapX, snapZ = self:XZ(snapCol, snapRow)
+
+    return self.object.positionToWorld({
+        x = snapX,
+        y = lpos.y,
+        z = snapZ,
+    })
+end
+
+---------------------------------------------------------------------------------------------------
+
+return {
+    Create = GridClass.Create,
+    Is = function(x) return getmetatable(x) == GridClass end,
+}

@@ -1,0 +1,370 @@
+local Util = {}
+
+---------------------------------------------------------------------------------------------------
+
+function Util.TabStr(t)
+    if type(t) != "table" then
+        return tostring(t)
+    end
+
+    local entries = {}
+    for k, v in pairs(t) do
+        local vstr = (type(v) == "table") and Util.TabStr(v) or tostring(v)
+        table.insert(entries, tostring(k).."="..vstr)
+    end
+    return "{"..table.concat(entries, ",").."}"
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.SafeFormat(fmt, ...)
+    fmt = fmt or ""
+
+    local args = table.pack(...)
+    for i = 1, args.n do
+        local arg = args[i]
+        if arg == nil then
+            args[i] = "<nil>"
+        elseif type(arg) == "table" then
+            args[i] = tostring(arg)
+        end
+    end
+
+    local result
+    if not pcall(function() result = string.format(fmt, table.unpack(args)) end) then
+        result = "FORMATTING ERROR: fmt="..fmt
+        for i = 1, args.n do
+            result = result..", arg"..i.."="..tostring(args[i])
+        end
+    end
+
+    return result
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.ArrayContains(array, value)
+    for _, element in ipairs(array) do
+        if element == value then
+            return true
+        end
+    end
+
+    return false
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Find(array, value)
+    for i, v in ipairs(array) do
+        if v == value then
+            return v
+        end
+    end
+    return nil
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.FindIf(array, fn)
+    for i, v in ipairs(array) do
+        if fn(v) then
+            return v
+        end
+    end
+    return nil
+end
+---------------------------------------------------------------------------------------------------
+
+function Util.Intersect(t1, t2)
+    result = {}
+    for k, v in pairs(t1) do
+        if t2[k] ~= nil then
+            result[k] = v
+        end
+    end
+    return result
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Index(array, field)
+    local index = {}
+    for _, elem in ipairs(array) do
+        index[elem[field]] = elem
+    end
+    return index
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.MultiIndex(array, field)
+    local index = {}
+    for _, elem in ipairs(array) do
+        local k = elem[field]
+        if not index[k] then
+            index[k] = { elem }
+        else
+            table.insert(index[k], elem)
+        end
+    end
+    return index
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Split(str, sep)
+    local results = {}
+    for match in string.gmatch(str, "([^"..sep.."]+)") do
+        table.insert(results, match)
+    end
+    return results
+end
+
+---------------------------------------------------------------------------------------------------
+
+-- creates a new array consistenting of a1..a2
+function Util.ConcatArrays(a1, a2)
+    local result = {}
+    for i = 1, #a1 do
+        result[i] = a1[i]
+    end
+    for i = 1, #a2 do
+        result[#a1 + i] = a2[i]
+    end
+    return result
+end
+
+---------------------------------------------------------------------------------------------------
+
+-- appends a2 onto a1, does *not* create a new array!
+function Util.AppendArray(a1, a2)
+    local n = #a1
+    for i = 1, #a2 do
+        a1[n + i] = a2[i]
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Max(v1, v2)
+    return v1 > v2 and v1 or v2
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Min(v1, v2)
+    return v1 < v2 and v1 or v2
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Clamp(x, lo, hi)
+    if x < lo then
+        return lo
+    elseif x > hi then
+        return hi
+    else
+        return x
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.RemoveUnordered(array, index)
+    array[index] = array[#array]
+    array[#array] = nil
+end
+
+---------------------------------------------------------------------------------------------------
+
+Util.HIGHLIGHT_COLOR = { r = 1, g = 0, b = 0.5 }
+
+function Util.Highlight(object, seconds)
+    seconds = seconds or 10
+
+    object.highlightOn(Util.HIGHLIGHT_COLOR, seconds)
+    local pos = object.getPosition()
+    local size = object.getBounds().size
+    Physics.cast({
+        origin    = { x = pos.x, y = pos.y + 5, z = pos.z },
+        direction = { x = 0, y = -1, z = 0 },
+        type      = 3,
+        size      = { x = size.x * 2, y = size.y * 2, z = size.z * 2 },
+        debug     = true,
+    })
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.HighlightAll(objects, seconds)
+    for _, object in ipairs(objects) do
+        Util.Highlight(object, seconds)
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.ColorUiString(color)
+    return string.format("rgb(%f, %f, %f)", color.r, color.g, color.b)
+end
+
+---------------------------------------------------------------------------------------------------
+
+-- sorted array method
+-- function Util.Unique(sortedArray, eqFunc)
+--     local n = #sortedArray
+--     if n <= 1 then
+--         return
+--     end
+--     local u = 1
+--     for i = 2, n do
+--         if not eqFunc(sortedArray[i], sortedArray[u]) then
+--             u = u + 1
+--             sortedArray[u] = sortedArray[i]
+--         end
+--     end
+--
+--     u = u + 1
+--     while u <= n do
+--         sortedArray[u] = nil
+--         u = u + 1
+--     end
+-- end
+
+-- table method
+function Util.Unique(array, keyField)
+    local table = {}
+    for _, elem in ipairs(array) do
+        table[elem[keyField]] = elem
+    end
+    local results = {}
+    for _, elem in pairs(table) do
+        table.insert(results, elem)
+    end
+    return results
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Filter(array, filter)
+    local results = {}
+    for _, elem in ipairs(array) do
+        if filter(elem) then
+            table.insert(results, elem)
+        end
+    end
+    return results
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Lerp(x0, x1, t)
+    return x0 + t * (x1 - x0)
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Capitalize(s)
+    return string.upper(string.sub(s, 1, 1))..string.sub(s, 2)
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.Map(a, f)
+    local results = {}
+    for _, elem in ipairs(a) do
+        table.insert(results, f(elem))
+    end
+    return results
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.TruncateString(s, max)
+    if not s or s:len() <= max then
+        return s
+    end
+
+    return s:sub(1, max - 2)..".."
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.LookAt(params)
+    local position = nil
+    if params.position then
+        position = params.position
+    elseif params.object then
+        position = params.object.getPosition()
+    else
+        assert(false, "Either position or object is required")
+    end
+
+    for _, player in ipairs(Player.getPlayers()) do
+        player.lookAt({
+            position = position,
+            pitch = params.pitch or 65,
+            yaw = 0,
+            distance = params.distance or 60,
+        })
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.DeepCopy(source)
+    local copy
+    if type(source) != "table" then
+        return source
+    end
+
+    local copy = {}
+    for key, value in next, source, nil do
+        copy[Util.DeepCopy(key)] = Util.DeepCopy(value)
+    end
+
+    return copy
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.IsFaceDown(object)
+    local z = object.getRotation().z
+    return z >= 15 and z <= 345
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.TokenValue(token)
+    local value = Util.IsFaceDown(token) and -1 or 1
+    local qty = token.getQuantity()
+    if qty >= 2 then
+        value = value * qty
+    end
+    return value
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.CopyArray(a)
+    local copy = {}
+    for i, v in ipairs(a) do
+        copy[i] = v
+    end
+    return copy
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Util.CopyMap(m)
+    local copy = {}
+    for k, v in pairs(m) do
+        copy[k] = v
+    end
+    return copy
+end
+
+---------------------------------------------------------------------------------------------------
+
+return Util

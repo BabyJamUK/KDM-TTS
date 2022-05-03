@@ -1,0 +1,150 @@
+local Util = require("Kdm/Util/Util")
+
+---------------------------------------------------------------------------------------------------
+
+local Check = {}
+
+---------------------------------------------------------------------------------------------------
+
+-- this is the __call metamethod, so the first parameter is ignored
+function Check.Check(ignore, condition, fmt, ...)
+    if not condition then
+        return false, Util.SafeFormat(fmt, ...)
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.Fail(fmt, ...)
+    if debug then
+        log(debug.traceback(), nil, "error")
+    end
+    return false, Util.SafeFormat(fmt, ...)
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.Type(value, expectedType, fmt, ...)
+    if value == nil then
+        return false, Util.SafeFormat("Required %s is nil: "..(fmt or ""), expectedType, ...)
+    end
+    local actualType = type(value)
+    if actualType != expectedType then
+        return false, Util.SafeFormat("Required %s arg has type %s: "..(fmt or ""), expectedType, actualType, ...)
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.TypeOrNil(value, expectedType, fmt, ...)
+    if value != nil then
+        local actualType = type(value)
+        if actualType != expectedType then
+            return false, Util.SafeFormat("Required %s arg has type %s: "..(fmt or ""), expectedType, actualType, ...)
+        end
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.Str(value, fmt, ...) return Check.Type(value, "string", fmt, ...) end
+function Check.StrOrNil(value, fmt, ...) return Check.TypeOrNil(value, "string", fmt, ...) end
+
+function Check.Boolean(value, fmt, ...) return Check.Type(value, "boolean", fmt, ...) end
+function Check.BooleanOrNil(value, fmt, ...) return Check.TypeOrNil(value, "boolean", fmt, ...) end
+
+function Check.Num(value, fmt, ...) return Check.Type(value, "number", fmt, ...) end
+function Check.NumOrNil(value, fmt, ...) return Check.TypeOrNil(value, "number", fmt, ...) end
+
+function Check.Table(value, fmt, ...) return Check.Type(value, "table", fmt, ...) end
+function Check.TableOrNil(value, fmt, ...) return Check.TypeOrNil(value, "table", fmt, ...) end
+
+function Check.Object(value, fmt, ...) return Check.Type(value, "userdata", fmt, ...) end
+function Check.ObjectOrNil(value, fmt, ...) return Check.TypeOrNil(value, "userdata", fmt, ...) end
+
+function Check.Func(value, fmt, ...) return Check.Type(value, "function", fmt, ...) end
+function Check.FuncOrNil(value, fmt, ...) return Check.TypeOrNil(value, "function", fmt, ...) end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.Vec3(value, fmt, ...)
+    local res = Check.Type(value, "table", fmt, ...)
+    if not res then
+        return res
+    end
+    if value.x == nil or value.y == nil or value.z == nil then
+        return false, Util.SafeFormat("Required arg must be a vec3: %s "..(fmt or ""), value, ...)
+    end
+    return true
+end
+
+function Check.Vec3OrNil(value, fmt, ...)
+    local res = Check.TypeOrNil(value, "table", fmt, ...)
+    if not res then
+        return res
+    end
+    if value.x == nil or value.y == nil or value.z == nil then
+        return false, Util.SafeFormat("Optional arg must be a vec3: %s "..(fmt or ""), value, ...)
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.Vec2(value, fmt, ...)
+    local res = Check.Type(value, "table", fmt, ...)
+    if not res then
+        return res
+    end
+    if value.x == nil or value.y == nil then
+        return false, Util.SafeFormat("Required arg must be a vec2: %s "..(fmt or ""), value, ...)
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.Vec2OrNil(value, fmt, ...)
+    local res = Check.TypeOrNil(value, "table", fmt, ...)
+    if not res then
+        return res
+    end
+    if value.x == nil or value.y == nil then
+        return false, Util.SafeFormat("Optional arg must be a vec2: %s "..(fmt or ""), value, ...)
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.Color(value, fmt, ...)
+    local res = Check.Type(value, "table", fmt, ...)
+    if not res then
+        return res
+    end
+    if #value != 3 and #value != 4 and (value.r == nil or value.g == nil or value.b == nil) then
+        return false, Util.SafeFormat("Required arg must be a color: "..(fmt or ""), ...)
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Check.ColorOrNil(value, fmt, ...)
+    local res = Check.TypeOrNil(value, "table", fmt, ...)
+    if not res then
+        return res
+    end
+    if #value != 3 and #value != 4 and (value.r == nil or value.g == nil or value.b == nil) then
+        return false, Util.SafeFormat("Optional arg must be a color: "..(fmt or ""), ...)
+    end
+    return true
+end
+
+---------------------------------------------------------------------------------------------------
+
+setmetatable(Check, { __call = Check.Check })
+return Check

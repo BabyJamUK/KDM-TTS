@@ -1,0 +1,144 @@
+local Check = require("Kdm/Util/Check")
+local Grid = require("Kdm/Util/Grid")
+local log = require("Kdm/Log").ForModule("Overlay")
+local Util = require("Kdm/Util/Util")
+
+---------------------------------------------------------------------------------------------------
+
+local OverlayClass = {}
+OverlayClass.__index = OverlayClass
+
+---------------------------------------------------------------------------------------------------
+
+function OverlayClass.Create(params)
+    assert(Check.Object(params.object))
+    assert(Grid.Is(params.grid))
+    assert(Check.Num(params.height))
+
+    local overlay = {
+        object = params.object,
+        grid = params.grid,
+        height = params.height,
+    }
+    setmetatable(overlay, OverlayClass)
+
+    return overlay
+end
+
+---------------------------------------------------------------------------------------------------
+
+local function Overlay_Dud() end
+
+function OverlayClass:ClampAndAddRect(left, top, width, height, color)
+    local grid = self.grid
+
+    -- inclusive
+    local right = left + width - 1
+    local bottom = top + height - 1
+
+    if left < 0 then left = 0 end
+    if right >= grid:Cols() then right = grid:Cols() - 1 end
+    if top < 0 then top = 0 end
+    if bottom >= grid:Rows() then bottom = grid:Rows() - 1 end
+
+    width = right - left + 1
+    height = bottom - top + 1
+    if width <= 0 or height <= 0 then
+        return
+    end
+
+    local centerCol = left + (right - left) / 2
+    local centerRow = top + (bottom - top) / 2
+    local x, z = grid:XZ(centerCol, centerRow)
+    local l = self.object.positionToLocal(grid:Object().positionToWorld({ x, self.height, z }))
+    local squareSize = 10900    -- this depends on the size/scale of the underlying object, it should be a parameter not hard-coded
+    self.object.createButton({
+        function_owner = self,
+        position = { x = -l.x, y = l.y, z = l.z },
+        scale = { x = 0.1, y = 0.1, z = 0.1 },
+        width = squareSize * width,
+        height = squareSize * height,
+        color = color,
+        hover_color = color,
+        press_color = color,
+        click_function = "Overlay_Dud",
+    })
+end
+
+---------------------------------------------------------------------------------------------------
+
+function OverlayClass:Show(position, baseSize, radius, color)
+    assert(Check.Vec3(position, "position"))
+    assert(Check.Num(baseSize, "baseSize"))
+    assert(Check.Num(radius, "radius"))
+    assert(Check.Color(color, "color"))
+
+    self:Hide()
+
+    -- the movement overlay looks like a diamond
+    -- we want to draw this diamond using as few squares as possible, since each square must be represented by a button
+    -- and they're slow to create and destroy (pickup/drop will lag)
+    -- all of the following math is to construct the smallest number of squares for a given movement overlay.
+    -- there's one big central square, then rectangles on the top/bottom/left/right that get progressively smaller and taper off to zero.
+
+    local localPosition = self.object.positionToLocal(position)
+    local centerCol, centerRow = self.grid:ColRow(localPosition)
+    log:Debugf("center: %d, %d", centerCol, centerRow)
+    local baseLeft, baseTop  -- left-top corner of the figurine's base (1x1, 2x2, 3x3, etc)
+    if baseSize % 2 == 0 then
+        local offset = math.floor(baseSize / 2) - 1
+        baseLeft = math.floor(centerCol) - offset
+        baseTop = math.floor(centerRow) - (baseSize / 2) + 1
+    else
+        local offset = math.floor(baseSize / 2)
+        baseLeft = math.floor(centerCol + 0.5) - offset
+        baseTop = math.floor(centerRow + 0.5) - offset
+    end
+    log:Debugf("base LT: %d, %d", baseLeft, baseTop)
+
+    local halfRadius = math.floor(radius / 2)
+
+    -- "big" is the big central square of the movement overlay
+    local bigLeft = baseLeft - halfRadius
+    local bigRight = baseLeft + (baseSize - 1) + halfRadius
+    local bigTop = baseTop - halfRadius
+    local bigBottom = baseTop + (baseSize - 1) + halfRadius
+
+    local size = baseSize + (2 * halfRadius)
+
+    self:ClampAndAddRect(bigLeft, bigTop, size, size, color)
+
+    local distance = 1
+    local offset = 0
+    if radius % 2 == 0 then
+        size = size - 2
+        offset = 1
+    end
+    while size >= baseSize do
+        -- left
+        self:ClampAndAddRect(bigLeft - distance, bigTop + offset, 1, size, color)
+        -- top
+        self:ClampAndAddRect(bigLeft + offset, bigTop - distance, size, 1, color)
+        -- right
+        self:ClampAndAddRect(bigRight + distance, bigTop + offset, 1, size, color)
+        -- bottom
+        self:ClampAndAddRect(bigLeft + offset, bigBottom + distance, size, 1, color)
+
+        size = size - 2
+        distance = distance + 1
+        offset = offset + 1
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function OverlayClass:Hide()
+    self.object.clearButtons()
+end
+
+---------------------------------------------------------------------------------------------------
+
+return {
+    Create = OverlayClass.Create,
+    Is = function(x) return getmetatable(x) == OverlayClass end,
+}

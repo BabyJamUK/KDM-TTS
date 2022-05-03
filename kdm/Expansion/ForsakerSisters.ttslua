@@ -1,0 +1,169 @@
+return {
+    name = "Forsaker Sisters",
+
+    guidNames = { ["271f3a"] =  "Forsaker Sisters Archive" },
+
+    components = {
+        ["Patterns"] = "Forsaker Sisters Patterns",
+        ["Rare Gear"] = "Forsaker Sisters Rare Gear",
+        ["Strange Resources"] = "Forsaker Sisters Strange Resources",
+        ["Disorders"] = "Forsaker Sisters Disorders",
+        ["Secret Fighting Arts"] = "Forsaker Sisters Secret Fighting Arts",
+    },
+
+    archiveOverrides = {
+        newArchive = "Forsaker Sisters Archive",
+        oldArchive = "Core Archive",
+        entries = {
+        { "Core Settlement Events", "Settlement Events" },
+        }
+    },
+
+    removeTimelineEvent = { year = 6, name = "Armored Strangers" },
+    replaceNemesis = { nemesis = "King's Man", replacement = "Forsaker Sisters" },
+    timelineEvents = {
+        { year = 6, name = "Air of Dominance", type = "RulebookEvent" },
+    },
+
+    weaponStats = {
+        ["Pig Iron Blade"]    = { speed = 3, accuracy = 6, strength = 3 },
+        ["Pig Iron Polearm"]  = { speed = 1, accuracy = 4, strength = 7 },
+    },
+
+    armorStats = {
+        ["Forsaker Veil"]     = { head = 3, arms = 0, body = 0, waist = 0, legs = 0 },
+    },
+
+    archiveEntries = {
+        archive = "Forsaker Sisters Archive",
+        entries = {
+            { "Forsaker Sisters Rules", "Rulebook" },
+            { "Forsaker Sisters Patterns", "Patterns" },
+            { "Forsaker Sisters Rare Gear", "Gear" },
+            { "Forsaker Sisters", "Monster Figurine" },
+            { "Forsaker Sisters Strange Resources", "Strange Resources" },
+            { "Forsaker Sisters Hit Locations", "Hit Locations" },
+            { "Forsaker Sisters Disorders", "Disorders" },
+            { "Forsaker Sisters Secret Fighting Arts", "Secret Fighting Arts" },
+
+            { "Forsaker Sisters Special AI", "AI" },
+            { "Forsaker Sisters Info", "AI" },
+            { "Forsaker Sisters Basic Action", "AI" },
+            { "Forsaker Sisters Basic AI", "AI" },
+            { "Forsaker Sisters Advanced AI", "AI" },
+            { "Forsaker Sisters Legendary AI", "AI" },
+        }
+    },
+
+    rulebooks = {
+        {
+            name = "Forsaker Sisters Rules",
+            pages = {
+                ["Forsaker Sisters Rules"] = {
+                    keywords = { "Forsaker", "Sisters", "Rules"},
+                    state = 1,
+                },
+                ["Air of Dominance"] = {
+                    keywords = { "Air", "of", "Dominance"},
+                    state = 2,
+                    timelineEvent = true,
+                },
+                ["Showdown: Forsaker Sisters"] = {
+                    keywords = { "Showndown:", "Forsaker", "Sisters"},
+                    state = 3,
+                    showdown = true,
+                },
+                ["Darkest Desires"] = {
+                    keywords = { "Darkest", "Desires"},
+                    state = 4,
+                },
+                ["Childhood's End"] = {
+                    keywords = { "Childhood's", "End"},
+                    state = 5,
+                },
+            },
+        },
+    },
+
+    monsters = {
+        {
+            name = "Forsaker Sisters",
+            nemesis = true,
+            size = { x = 1, y = 1 },
+            rules = { "Forsaker Sisters Rules", 3 },
+            resourcesDeck = false,
+            position = "(11.5, 8.5)",
+            playerPositions = { "(10, 16)", "(11, 16)", "(12, 16)", "(13, 16)" },
+            playerRotations = { { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 } },
+            fixedTerrain = {
+                {
+                    terrain = "Hovel",
+                    positions = { "(5.5, 6.5)", "(17.5, 6.5)" },
+                    rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 }},
+                },
+                {
+                    terrain = "2 Cowering Survivors",
+                    positions = { "(5, 5)", "(18, 5)"},
+                    rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 }},
+                },
+            },
+            levels = {
+                {
+                    name = "Level 1",
+                    level = 1,
+                    showdown = {
+                        basic = 5,
+                        advanced = 4,
+                        movement = 7,
+                        toughness = 10,
+                        starting = {
+                            special = {"Blood Relative", "Dreaded Trophies", "Revenge", "No Mercy For The Weak"}
+                        }
+
+                    },
+                },
+                {
+                    name = "Level 2",
+                    level = 2,
+                    showdown = {
+                        basic = 5,
+                        advanced = 4,
+                        legendary = 1,
+                        movement = 7,
+                        toughness = 14,
+                        speed = 1,
+                        damage = 1,
+                        accuracy = 1,
+                        evasion = 1,
+                        starting = {
+                            special = {"Blood Relative", "Dreaded Trophies", "Revenge", "No Mercy For The Weak", "Love Scorned"}
+                        }
+
+                    },
+                },
+                {
+                    name = "Level 3",
+                    level = 3,
+                    showdown = {
+                        survivorStatus = { "Infectious Lunacy", "Infectious Lunacy", "Infectious Lunacy", "Infectious Lunacy" },
+                        basic = 7,
+                        advanced = 4,
+                        legendary = 2,
+                        movement = 9,
+                        toughness = 17,
+                        speed = 2,
+                        damage = 2,
+                        accuracy = 2,
+                        evasion = 2,
+                        starting = {
+                            special = {"Blood Relative", "Dreaded Trophies", "Revenge", "No Mercy For The Weak", "Love Scorned" },
+                            misc = { "Indomitable" },
+                        }
+
+                    },
+                },
+            },
+        },
+    },
+    --Pull out patern cards from this archive and create archive chest for all Pattern Gear Cards
+}

@@ -1,0 +1,640 @@
+return {
+    name = "Harvester Worm",
+
+    guidNames = { ["951ad1"] = "Harvester Worm Archive" },
+
+    components = {
+        ["Fighting Arts"] = "Harvester Worm Fighting Arts",
+        ["Secret Fighting Arts"] = "Harvester Worm Secret Fighting Arts",
+        ["Disorders"] = "Harvester Worm Disorders",
+        ["Strange Resources"] = "Harvester Worm Strange Resources",
+        ["Settlement Events"] = "Harvester Worm Settlement Events",
+        ["Innovations"] = "Harvester Worm Innovations",
+        ["Settlement Locations"] = "Harvester Worm Settlement Locations",
+        ["Abilities"] = "Harvester Worm Abilities",
+        ["Bookmarks"] = "Harvester Worm Bookmarks",
+        ["Terrain"] = "Harvester Worm Terrain",
+        ["Terrain Tiles"] = { "Stone Statue", "Gardener Ball", "Gardener Worm", "Glowing Corpse" },
+
+    },
+
+    campaigns = {
+        {
+            name = "People of the Stone",
+            years = 5,
+            timeline = {
+                { year = 1, type = "RulebookEvent", name = "Worm Feast" },
+                { year = 1, type = "RulebookEvent", name = "First Day" },
+                { year = 2, type = "RulebookEvent", name = "Endless Screams" },
+                { year = 2, type = "RulebookEvent", name = "Stranger in the Dark" },
+                { year = 3, type = "RulebookEvent", name = "Silken Skin" },
+                { year = 4, type = "RulebookEvent", name = "Hacked Apart" },
+                { year = 4, type = "ShowdownEvent", monster = "Butcher", level = "Level 1" },
+                { year = 5, type = "RulebookEvent", name = "Dust to Dust" },
+            },
+            survivalActions = {
+                { name = "Dodge", checked = true },
+                { name = "Dive" },
+                { name = "Dash" },
+                { name = "Surge" },
+                --{ name = "Endure" },
+            },
+            milestones = {
+                { name = "First Birth", event = "Principle: New Life" },
+                { name = "First Death", event = "Principle: Death" },
+                { name = "15 Population", event = "Principle: Society" },
+                { name = "5 Innovations", event = "Hooded Knight" },
+            },
+            objectsByLocation = {
+                ["Innovation Deck"] = { tag = "Deck", name = "Innovation Deck", type = "Innovations", faceDown = true, cards = {
+                    { name = "Ammonia - Language Consequence", type = "Innovations" },
+                    { name = "Drums - Language Consequence", type = "Innovations" },
+                    { name = "Hovel - Language Consequence", type = "Innovations" },
+                    { name = "Inner Lantern - Language Consequence", type = "Innovations" },
+                    { name = "Paint - Language Consequence", type = "Innovations" },
+                    { name = "Symposium - Language Consequence", type = "Innovations" },
+                } },
+                ["Principle: Death"] = { tag = "Deck", name = "Principle: Death", type = "Innovations", faceDown = true, cards = {
+                    { name = "Cannibalize - Death Principle", type = "Innovations" },
+                    { name = "Graves - Death Principle", type = "Innovations" },
+                } },
+                ["Principle: New Life"] = { tag = "Deck", name = "Principle: New Life", type = "Innovations", faceDown = true, cards = {
+                    { name = "Protect the Young - New Life Principle", type = "Innovations" },
+                    { name = "Survival of the Fittest - New Life Principle", type = "Innovations" },
+                } },
+                ["Principle: Society"] = { tag = "Deck", name = "Principle: Society", type = "Innovations", faceDown = true, cards = {
+                    { name = "Accept Darkness - Society Principle", type = "Innovations" },
+                    { name = "Collective Toil - Society Principle", type = "Innovations" },
+                } },
+                ["Principle: Conviction"] = { tag = "Deck", name = "Principle: Conviction", type = "Innovations", faceDown = true, cards = {
+                    { name = "Barbaric - Conviction Principle", type = "Innovations" },
+                    { name = "Romantic - Conviction Principle", type = "Innovations" },
+                } },
+                ["Innovation 1"] = { tag = "Card", name = "Stone Touch", type = "Innovations" },
+                ["Settlement Location 1"] = { tag = "Card", name = "Statue Garden", type = "Settlement Locations" },
+            },
+            references = {
+                { name = "Age Reference", location = "Reference 1" },
+                { name = "Intimacy (People of the Stone) Reference", location = "Reference 2" },
+                { name = "Bold Reference", location = "Reference 3" },
+                { name = "Insight Reference", location = "Reference 4" },
+            },
+            milestoneEvents = {
+                ["huntXp"] = {
+                    { rules = "Core Rules", state = 53 },  -- Age
+                    { rules = "Core Rules", state = 53 },  -- Age
+                    { rules = "Core Rules", state = 53 },  -- Age
+                    { rules = "Core Rules", state = 53 },  -- Age
+                    { rules = "Core Rules", state = 22 },  -- Retired
+                },
+                ["courage"] = {
+                    { rules = "Core Rules", state = 56 },  -- Bold
+                    { rules = "Core Rules", state = 83 },  -- See the Truth
+                },
+                ["understanding"] = {
+                    { rules = "Core Rules", state = 65 },  -- Insight
+                    { rules = "Core Rules", state = 90 },  -- White Secret
+                },
+                ["weaponProficiency"] = {
+                    { rules = "Core Rules", state = 21 },  -- Specialist
+                    { rules = "Core Rules", state = 21 },  -- Master
+                },
+            },
+        },
+        
+    },
+
+    settlementEvents = {
+        "The Ground Hungers",
+        "Settlement Caravan",
+        "Harvested",
+    },
+
+    timelineEvents = {
+        { year = 2, name = "Hollow Grave", type = "RulebookEvent" },
+    },
+
+    minions = {
+        {
+            name = "Wormlet Mob",
+            movement = 10,
+            size = { x = 2, y = 2 },
+        },
+        {
+            name = "Painted Wormlets",
+            movement = 11,
+            size = { x = 2, y = 2 },
+        },
+    },
+
+    terrain = {
+        ["Stone Statue"]             = { terrainTile = "Stone Statue",   count = 1 },
+        ["Gardener Ball"]            = { terrainTile = "Gardener Ball",  count = 1 },
+        ["Gardener Worm (Terrain)"]  = { terrainTile = "Gardener Worm (Terrain)",  count = 1 },
+        ["Glowing Corpse"]           = { terrainTile = "Glowing Corpse", count = 1 },
+    },
+
+    terrainTileSizes = {
+        ["Stone Statue"]             = { x = 1, y = 2 },
+        ["Gardener Ball"]            = { x = 2, y = 2 },
+        ["Glowing Corpse"]           = { x = 2, y = 2 },
+        ["Gardener Worm (Terrain)"]  = { x = 2, y = 2 },
+    },
+
+
+    settlementLocationGear = {
+        ["Stone Distillery"] = "Stone Distillery Gear",
+    },
+
+    armorStats = {
+        ["Stone Mask"]          = { head = 2, arms = 0, body = 0, waist = 0, legs = 0 },
+        ["Blindfold"]           = { head = 1, arms = 0, body = 0, waist = 0, legs = 0 },
+        ["Face Fists"]          = { head = 0, arms = 2, body = 0, waist = 0, legs = 0 },
+        ["Calcified Fists"]     = { head = 0, arms = 6, body = 0, waist = 0, legs = 0 }, 
+        ["Tube Dress"]          = { head = 0, arms = 0, body = 2, waist = 2, legs = 0 },
+        ["Stone Pauldrons"]     = { head = 0, arms = 0, body = 5, waist = 0, legs = 0 },
+        ["Calcified Pauldrons"] = { head = 0, arms = 0, body = 15, waist = 0, legs = 0 }, 
+        ["Concussion Shield"]   = { head = 1, arms = 1, body = 1, waist = 1, legs = 1, modifier = true },
+    },
+
+    weaponStats = {
+        ["Concussion Shield"] = { speed = 1, accuracy = 6, strength = 3 },
+        ["Founding Spear"]    = { speed = 2, accuracy = 6, strength = 2 },
+        ["Mawhammer"]         = { speed = 2, accuracy = 5, strength = 8 },
+        ["Ouroboros"]         = { speed = 2, accuracy = 4, strength = 8 },
+        ["Face Fists"]        = { speed = 3, accuracy = 8, strength = 2, deadly = 1 },
+        ["Calcified Fists"]   = { speed = 3, accuracy = 6, strength = 5, deadly = 1 },
+        ["Noise Chain"]       = { speed = 3, accuracy = 7, strength = 2, paired = true },
+        ["Gong Hammer"]       = { speed = 2, accuracy = 5, strength = 0, },
+    },
+
+    archiveEntries = {
+        archive = "Harvester Worm Archive",
+        entries = {
+            { "Harvester Worm Rules", "Rulebook" }, 
+            { "Intimacy (People of the Stone) Reference", "References" },
+
+            { "Harvester Worm Fighting Arts", "Fighting Arts" },
+            { "Harvester Worm Secret Fighting Arts", "Secret Fighting Arts" }, 
+            { "Harvester Worm Disorders", "Disorders" },
+            { "Harvester Worm Strange Resources", "Strange Resources" },
+            { "Harvester Worm Abilities", "Abilities" },
+            { "Harvester Worm Bookmarks", "Bookmarks"},
+            { "Harvester Worm Terrain", "Terrain" },
+            { "Stone Statue", "Terrain Tiles" },
+            { "Gardener Ball", "Terrain Tiles" },
+            { "Gardener Worm", "Terrain Tiles" },
+            { "Glowing Corpse", "Terrain Tiles" },
+            { "Harvester Worm Settlement Events", "Settlement Events" },
+            { "Harvester Worm Innovations", "Innovations" },
+            { "Harvester Worm Settlement Locations", "Settlement Locations" },
+            { "Stone Distillery Gear", "Gear" },
+
+            { "Harvester Worm", "Monster Figurine" },  
+
+            { "Harvester Worm Hunt Events", "Monster Hunt Events" },
+
+            { "Harvester Worm Info", "AI" },
+            { "Harvester Worm Basic Action", "AI" },
+            { "Harvester Worm Basic AI", "AI" },
+            { "Harvester Worm Advanced AI", "AI" },
+            { "Harvester Worm Legendary AI", "AI" },
+            { "Harvester Worm Special AI", "AI" },
+            { "Harvester Worm Hit Locations", "Hit Locations" },
+
+            { "Gardener Worm", "Monster Figurine" }, 
+
+            { "Gardener Worm Info", "AI" },
+            { "Gardener Worm Basic Action", "AI" },
+            { "Gardener Worm Basic AI", "AI" },
+            { "Gardener Worm Advanced AI", "AI" },
+            { "Gardener Worm Special AI", "AI" },
+            { "Gardener Worm Hit Locations", "Hit Locations" },
+
+            { "Wormlet Mob", "Minion Figurine" },
+            { "Painted Wormlets", "Minion Figurine" },
+        },
+    },
+
+    rulebooks = {
+        {
+            name = "Harvester Worm Rules",
+            pages = {
+                ["Harvester Worm Rules"] = {
+                    keywords = { "Harvester", "Worm", "Rules" },
+                    state = 1,
+                },
+                ["Hollow Grave"] = {
+                    keywords = { "Hollow", "Grave" },
+                    state = 4,
+                    timelineEvent = true,
+                },
+                ["Hunting Grounds"] = {
+                    keywords = { "Hunting", "Grounds" },
+                    state = 6,
+                    timelineEvent = true,
+                },
+                ["Nervous Ossification"] = {
+                    keywords = { "Nervous", "Ossification" },
+                    state = 6,
+                },
+                ["Fighting Over Scraps"] = {
+                    keywords = { "Fighting", "Over", "Scraps" },
+                    state = 7,
+                    timelineEvent = true,
+                },
+                ["Easy Pickings"] = {
+                    keywords = { "Easy", "Pickings" },
+                    state = 7,
+                    timelineEvent = true,
+                },
+                ["Belly Storage"] = {
+                    keywords = { "Belly", "Storage" },
+                    state = 8,
+                },
+                ["Party Tricks"] = {
+                    keywords = { "Party", "Tricks" },
+                    state = 8,
+                },
+                ["Showdown: Harvester Worm Level 1-2"] = {
+                    keywords = { "Showdown:", "Harvester", "Worm", "Level", "1-2" },
+                    state = 9,
+                    showdown = true,
+                },
+                ["Aftermath (Harvester Worm)"] = {
+                    keywords = { "Aftermath" },
+                    state = 10,
+                },
+                ["Showdown: Harvester Worm Level 3"] = {
+                    keywords = { "Showdown:", "Harvester", "Worm", "Level", "3" },
+                    state = 10,
+                    showdown = true,
+                },
+                ["Showdown: Gardener Worm"] = {
+                    keywords = { "Showdown:", "Gardener", "Worm" },
+                    state = 11,
+                    showdown = true,
+                },
+                ["Legendary Monsters (Harvester Worm)"] = {               
+                    keywords = { "Harvester", "Worm:", "Legendary", "Monsters" },
+                    state = 12,
+                },
+                ["Worm Feast"] = {
+                    keywords = { "Worm", "Feast" },
+                    state = 13,
+                    timelineEvent = true,
+                },
+                ["Intimacy (Harvester Worm)"] = {
+                    keywords = { "Intimacy" },
+                    state = 14,
+                },
+                ["Silken Skin"] = {
+                    keywords = { "Silken", "Skin" },
+                    state = 14,
+                    timelineEvent = true,
+                },
+                ["Hacked Apart"] = {
+                    keywords = { "Hacked", "Apart" },
+                    state = 15,
+                    timelineEvent = true,
+                },
+                ["Dust To Dust"] = {
+                    keywords = { "Dust", "To", "Dust" },
+                    state = 16,
+                    timelineEvent = true,
+                },
+                ["Showdown: Homecoming"] = {
+                    keywords = { "Showdown:", "Homecoming" },
+                    state = 17,
+                    showdown = true,
+                },
+                ["Glossary (Harvester Worm)"] = {
+                    keywords = { "Glossary" },
+                    state = 17,
+                },
+            },
+        },
+    },
+
+    monsters = {
+        {
+            name = "Harvester Worm",
+            nemesis = true,
+            size = { x = 1, y = 1 },
+            huntTrack = { "H", "H", "H", "H", "H", "O", "L", "M", "M", "M", "H" },
+            position = "(12, 6)",
+            resourcesDeck = false,
+            levels = {
+                {
+                    name = "Level 1",
+                    level = 1,
+                    showdown = {
+                        rules = { "Harvester Worm Rules", 9 },
+                        survivorStatus = { "Noise", "Noise", "Noise", "Noise" },
+                        basic = 3,
+                        advanced = 2,
+                        movement = 12,
+                        toughness = 13,
+                        starting = {
+                            special = { "Wormy Body", "Tremorsense", "Eruption", "Tenderize" }
+                        },
+                        fixedTerrain = {
+                            {
+                                terrain = "Hovel",
+                                positions = { "(8.5, 11.5)", "(14.5, 5.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 }},
+                            },
+                        },
+                        randomTerrain = 1,
+                        playerPositions = { "(11, 8)", "(11, 9)", "(12, 8)", "(12, 9)" },
+
+                    },
+                },
+                {
+                    name = "Level 2",
+                    level = 2,
+                    showdown = {
+                        rules = { "Harvester Worm Rules", 9 },
+                        survivorStatus = { "Noise", "Noise", "Noise", "Noise" },
+                        basic = 10,
+                        advanced = 7,
+                        movement = 12,
+                        toughness = 14,
+                        speed = 1,
+                        starting = {
+                            special = { "Wormy Body", "Tremorsense", "Eruption", "Tenderize" }
+                        },
+                        fixedTerrain = {
+                            {
+                                terrain = "Hovel",
+                                positions = { "(1.5, 11.5)", "(7.5, 5.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 }},
+                            },
+                        },
+                        randomTerrain = 1,
+                        playerPositions = { "(4, 8)", "(4, 9)", "(5, 8)", "(5, 9)" },
+                        playerRotations = {{ x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 },{ x = 0, y = 90, z = 0 } },
+
+                    },
+                },
+                {
+                    name = "Level 3",
+                    level = 3,
+                    monsterHuntPosition = 11,
+                    showdown = {
+                        rules = { "Harvester Worm Rules", 10 },
+                        survivorStatus = { "Noise", "Noise", "Noise", "Noise" },
+                        basic = 5,
+                        advanced = 8,
+                        legendary = 9,
+                        movement = 14,
+                        toughness = 18,
+                        speed = 2,
+                        damage = 1,
+                        luck = 1,
+                        starting = {
+                            special = { "Wormy Body", "Tremorsense", "Eruption", "Parasite Infusion" }
+                        },
+                        fixedTerrain = {
+                            {
+                                terrain = "Gardener Worm (Terrain)",
+                                positions = { "(11.5, 8.5)" },
+                                rotations = { { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Stone Statue",
+                                positions = { "(18.5, 6)", "(18.5, 11)", "(17.5, 8)", "(17.5, 9)" },
+                                rotations = { { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Toppled Pillar",
+                                positions = { "(15, 8.5)", "(18.5, 4)" },
+                                rotations = { { x = 0, y = 0, z = 0 }, { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Dead Monster",
+                                positions = { "(20.5, 8.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 } },
+                            },
+                            {
+                                terrain = "3 Stone Columns",
+                                positions = { "(21.5, 4)", "(17.5, 13)", "(21.5, 13)" },
+                                rotations = { { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Survivor Corpse",
+                                positions = { "(21, 7)" },
+                                rotations = { { x = 0, y = 180, z = 0 } },
+                            },
+                        },
+                        playerPositions = { "(5, 7)", "(5, 8)", "(5, 9)", "(5, 10)" },
+                        playerRotations = {{ x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 },{ x = 0, y = 90, z = 0 } },
+                    },
+                },
+                {
+                    name = "Blood Worm",
+                    level = 4,
+                    showdown = {
+                        rules = { "Harvester Worm Rules", 12 },
+                        survivorStatus = { "Noise", "Noise", "Noise", "Noise" },
+                        movement = 10,
+                        toughness = 21,
+                        speed = 2,
+                        evasion = 2,
+                        life = 14,
+                        customBasic = { "Concussion Combo", "Pain Train", "Megabite", "Seismic Belly Flop", "Thrash", },
+                        customAdvanced = { "Clingy", "Fist and Tooth", "The Worm" },
+                        starting = {
+                            special = { "Split Body", "Tremorsense", "Double Eruption", "Vengeful Stone Heart (Blood Worm)", "Facial Foreskin (Blood Worm)" }
+                        },
+                        removeHitLocations = { "Patient Stone Heart", "Midpoint", "Intimate Stone Heart", "Stone Face", "Facial Foreskin", "Vengeful Stone Heart" },
+                        fixedTerrain = {
+                            {
+                                terrain = "Hovel",
+                                positions = { "(8.5, 11.5)", "(14.5, 5.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 }},
+                            },
+                        },
+                        playerPositions = { "(11, 8)", "(11, 9)", "(12, 8)", "(12, 9)" },
+                        playerRotations = {{ x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 },{ x = 0, y = 90, z = 0 } },
+                    },
+                },
+                {
+                    name = "Dung Worm",
+                    level = 5,
+                    showdown = {
+                        rules = { "Harvester Worm Rules", 12 },
+                        survivorStatus = { "Noise", "Noise", "Noise", "Noise" },
+                        movement = 14,
+                        toughness = 22,
+                        accuracy = 2,
+                        luck = 2,
+                        damage = 3,
+                        life = 11,
+                        customBasic = { "Home Run" },
+                        miscAI = { "Backspin Shot (Dung Worm)", "Invisible Layup (Dung Worm)", "Ricochet Shot (Dung Worm)" },
+                        customAdvanced = { "Food Fight", "Worm Whip" },
+                        customLegendary = { "Abduct", "Free Food", "Garden Sweep", "Regurgitate", "Together Forever" },
+                        miscHitLocations = { "Century Carapace (Dung Worm)", "Century Carapace (Dung Worm)", "Century Carapace (Dung Worm)", "Century Carapace (Dung Worm)", "Century Carapace (Dung Worm)", "Century Carapace (Dung Worm)", "Filthy Gut (Dung Worm)", "Side of Resin Ball (Dung Worm)", "Side of Resin Ball (Dung Worm)" },
+                        starting = {
+                            special = { "Wormy Body", "Tremorsense", "Eruption", "Parasite Infusion", "Prepared Tunnels", "Centiballer", "Heavy Load", "Separation Anxiety" },
+                            misc = { "Berserker" },
+                        },
+                        removeHitLocations = { "Patient Stone Heart", "Midpoint", "Stone Scales", "Stone Scales", "Stone Scales", "Stone Scales", "Stone Scales" },
+                        unfixedTerrain = { "Bug Patch", "Gardener Ball" },
+                        fixedTerrain = {
+                            {
+                                terrain = "Hovel",
+                                positions = { "(1.5, 11.5)", "(7.5, 5.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 }},
+                            },
+                        },
+                        playerPositions = { "(4, 8)", "(4, 9)", "(5, 8)", "(5, 9)" },
+                        playerRotations = {{ x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 },{ x = 0, y = 90, z = 0 } },
+                    },
+                },
+                {
+                    name = "Regal Worm",
+                    level = 6,
+                    showdown = {
+                        rules = { "Harvester Worm Rules", 12 },
+                        survivorStatus = { "Noise", "Noise", "Noise", "Noise" },
+                        survivorStatus2 = { "Battle Tempo", "Battle Tempo", "Battle Tempo", "Battle Tempo" },
+                        movement = 12,
+                        toughness = 26,
+                        accuracy = 4,
+                        luck = 2,
+                        damage = 2,
+                        speed = 6,
+                        life = 16,
+                        customBasic = { "Megabite", "Thundering Silence", "Fist and Tooth" },
+                        customAdvanced = { "Clingy", "Solvent Cannon", "Whispers of Dissent" },
+                        customLegendary = { "Wormhole", "Synchronized Screaming", "Euphoric Grasp", "Regurgitate" },
+                        miscHitLocations = { "Regal Gauntlet (Regal Worm)", "Regal Plume (Regal Worm)", "Regal Sabatons (Regal Worm)", "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        topHitLocationCards = { "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        starting = {
+                            special = { "Wormy Body", "Tremorsense", "Eruption", "Parasite Infusion", "Vapid Gaze", "Wormlet Mob Setup", "Wormlet Mob Action", "Young Wormlet Flesh" },
+                            misc = { "Weak Spot", "King's Aura", "Silent Hymn" },
+                        },
+                        removeHitLocations = { "Eager Stone Heart", "Facial Foreskin", "Vengeful Stone Heart", "Nervous Spasm", "Nervous Spasm", "Nervous Spasm", "Nervous Spasm", "Nervous Spasm" },
+                        unfixedTerrain = { "3 Stone Columns", "Ore Vein", "Ore Vein", "2 Acanthus Plants", "2 Acanthus Plants", "Giant Stone Face" },
+                        fixedTerrain = {
+                            {
+                                terrain = "Gardener Worm (Terrain)",
+                                positions = { "(11.5, 8.5)" },
+                                rotations = { { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Stone Statue",
+                                positions = { "(18.5, 6)", "(18.5, 11)", "(17.5, 8)", "(17.5, 9)" },
+                                rotations = { { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Toppled Pillar",
+                                positions = { "(15, 8.5)", "(18.5, 4)" },
+                                rotations = { { x = 0, y = 0, z = 0 }, { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Dead Monster",
+                                positions = { "(20.5, 8.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 } },
+                            },
+                            {
+                                terrain = "3 Stone Columns",
+                                positions = { "(21.5, 4)", "(17.5, 13)", "(21.5, 13)" },
+                                rotations = { { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 } },
+                            },
+                            {
+                                terrain = "Survivor Corpse",
+                                positions = { "(21, 7)" },
+                                rotations = { { x = 0, y = 180, z = 0 } },
+                            },
+                        },
+                        playerPositions = { "(5, 7)", "(5, 8)", "(5, 9)", "(5, 10)" },
+                        playerRotations = {{ x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 },{ x = 0, y = 90, z = 0 } },
+                        miscObject = { name = "Wormlet Mob", type = "Minion Figurine" },
+                    },
+                },
+                {
+                    name = "Homecoming",
+                    level = 2,
+                    showdown = {
+                        rules = { "Harvester Worm Rules", 17 },
+                        survivorStatus = { "Noise", "Noise", "Noise", "Noise" },
+                        basic = 8,
+                        advanced = 5,
+                        movement = 12,
+                        toughness = 14,
+                        starting = {
+                            special = { "Wormy Body", "Tremorsense", "Tenderize", "Impatience", "Reinforcements", "Abandon Settlement", "Eruption" }
+                        },
+                        unfixedTerrain = { "Stone Statue" },
+                        fixedTerrain = {
+                            {
+                                terrain = "Hovel",
+                                positions = { "(6.5, 8.5)" },
+                                rotations = { { x = 0, y = 180, z = 0 } },
+                            },
+                            {
+                                terrain = "Gardener Worm (Terrain)",
+                                positions = { "(2.5, 8.5)" },
+                                rotations = { { x = 0, y = 90, z = 0 } },
+                            },
+                        },
+                        randomTerrain = 1,
+                        playerPositions = { "(1, 7)", "(1, 8)", "(1, 9)", "(1, 10)" },
+                        playerRotations = {{ x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 90, z = 0 },{ x = 0, y = 90, z = 0 } },
+
+                    },
+                },
+            },
+
+        },
+        {
+            name = "Gardener Worm",
+            nemesis = true,
+            size = { x = 2, y = 2 },
+            rules = { "Harvester Worm Rules", 11 },
+            resourcesDeck = false,
+            legendaryAiDeck = false,
+            position = "(11.5, 8.5)",
+            playerPositions = { "(9, 6)", "(14, 6)", "(9, 11)", "(14, 11)" },
+            playerRotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 },{ x = 0, y = 0, z = 0 },{ x = 0, y = 0, z = 0 } },
+            levels = {
+                {
+                    name = "Level 2",
+                    level = 2,
+                    showdown = {
+                        starting = {
+                            special = { "Pursuit" },
+                        },
+                        basic = 5,
+                        advanced = 3,
+                        movement = 3,
+                        toughness = 14,
+                        accuracy = -2,
+                        luck = 5,
+                    },
+                },
+                {
+                    name = "Level 3",
+                    level = 3,
+                    showdown = {
+                        starting = {
+                            special = { "Pursuit" },
+                        },
+                        basic = 9,
+                        advanced = 6,
+                        movement = 3,
+                        toughness = 18,
+                        luck = 5,
+                    },
+                },
+            },
+        },
+    },
+
+    
+
+
+}

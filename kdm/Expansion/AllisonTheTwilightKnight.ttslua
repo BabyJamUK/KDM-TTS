@@ -1,0 +1,276 @@
+return {
+
+    name = "Allison",
+
+    guidNames = { ["f5e5b1"] =  "Allison The Twilight Knight Archive" },
+
+    components = {
+        ["Abilities"] = "Allison The Twilight Knight Abilities",
+        ["Armor Sets"] = "Bronze Armor",
+        ["Settlement Locations"] = "Bronzesmith",
+        ["Rare Gear"] = "Allison The Twilight Knight Rare Gear",
+        ["Fighting Arts"] = "Quick Strike",
+        ["Secret Fighting Arts"] = "Survivorship",
+        ["Disorders"] = "Impetuous",
+        ["Strange Resources"] = "Allison The Twilight Knight Strange Resources",
+        ["Terrain"] = "Mineral Vein",
+        ["Terrain Tiles"] = "Mineral Vein",
+        ["Settlement Events"] = "Allison The Twilight Knight Settlement Events",
+        ["Innovations"] = "Allison The Twilight Knight Innovations",
+        ["Bookmarks"] = "Allison The Twilight Knight Bookmarks",
+        ["Tactics"] = "Sneak Attack",
+        ["Weapon Proficiencies"] = "Allison Twilight Sword Proficiency",
+        ["Patterns"] = "Allison The Twilight Knight Patterns",
+    },
+
+    settlementEvents = {
+        "Training Day",
+        "Coming Of Age",
+    },
+
+    replaceNemesis = { nemesis = "Watcher", replacement = "Allison Watcher" },
+
+    terrain = {
+        ["Mineral Vein"] = { terrainTile = "Mineral Vein", count = 1 },
+    },
+
+    terrainTileSizes = {
+        ["Mineral Vein"] = { x = 1, y = 1 },
+    },
+
+    armorStats = {
+        ["Bronze Armor"]             = { head = 1, arms = 1, body = 1, waist = 1, legs = 1, modifier = true },
+        ["Bronze Cuirass"]           = { head = 0, arms = 0, body = 3, waist = 3, legs = 0 },
+        ["Bronze Gauntlets"]         = { head = 0, arms = 3, body = 0, waist = 0, legs = 0 },
+        ["Bronze Greaves"]           = { head = 0, arms = 0, body = 0, waist = 0, legs = 3 },
+        ["Awakened Twilight Cloak"]  = { head = 3, arms = 0, body = 0, waist = 0, legs = 0 },
+        ["Nerve Cuirass"]            = { head = 0, arms = 0, body = 6, waist = 0, legs = 0 },
+        ["Relic Hood"]               = { head = 2, arms = 0, body = 0, waist = 0, legs = 0 },
+    },
+
+    weaponStats = {
+        ["Lantern Nerve Whip"]        = { speed = 2, accuracy = 6, strength = 9, deadly = 2 },
+        ["Allison's Twilight Sword"]  = { speed = 1, accuracy = 9, strength = 9 },
+        ["Bronze Sword"]              = { speed = 2, accuracy = 6, strength = 6, deadly = 2 },
+    },
+
+    settlementLocationGear = {
+        ["Bronzesmith"] = "Bronzesmith Gear",
+    },
+
+    rulebooks = {
+        {
+            name = "Allison The Twilight Knight Rules",
+            pages = {
+                ["Allison The Twilight Knight Rules"] = {
+                    keywords = { "Allison", "The", "Twilight", "Knight", "Rules" },
+                    state = 1,
+                },
+                ["Allison Hooded Knight"] = {
+                    keywords = { "Allison", "Hooded", "Knight" },
+                    state = 3,
+                    timelineEvent = true,
+                },
+                ["Showdown: Allison The Twilight Knight"] = {
+                    keywords = { "Showndown:", "Allison", "The", "Twilight", "Knight" },
+                    state = 4,
+                    showdown = true,
+                },
+                ["The Duel"] = {
+                    keywords = { "The", "Duel" },
+                    state = 5,
+                },
+                ["The Order"] = {
+                    keywords = { "The", "Order" },
+                    state = 6,
+                    timelineEvent = true,
+                },
+                ["Return Of The Order"] = {
+                    keywords = { "Return", "Of", "The", "Order" },
+                    state = 7,
+                    timelineEvent = true,
+                },
+                ["Who Watches The Watcher"] = {
+                    keywords = { "Who", "Watches", "The", "Watcher" },
+                    state = 8,
+                    timelineEvent = true,
+                },
+                ["Allison Showdown: Watcher"] = {
+                    keywords = { "Allison", "Showdown:", "Watcher" },
+                    state = 9,
+                    showdown = true,
+                },
+            },
+        },
+    },
+
+    archiveEntries = {
+        archive = "Allison The Twilight Knight Archive",
+        entries = {
+            { "Allison The Twilight Knight Rules", "Rulebook" },
+            { "Allison The Twilight Knight Rare Gear", "Gear" },
+            { "Allison The Twilight Knight Strange Resources", "Strange Resources" },
+            { "Allison Hit Locations", "Hit Locations" },
+            { "Impetuous", "Disorders" },
+            { "Allison The Twilight Knight Settlement Events", "Settlement Events" },
+            { "Sneak Attack", "Tactics"},
+            { "Allison Twilight Sword Proficiency", "Weapon Proficiencies" },
+            { "Allison The Twilight Knight Abilities", "Abilities" },
+            { "Quick Strike", "Fighting Arts" },
+            { "Survivorship", "Secret Fighting Arts" },
+            { "Allison The Twilight Knight Patterns", "Patterns" },
+
+            { "Mineral Vein", "Terrain" },
+            { "Mineral Vein", "Terrain Tiles" },
+
+            { "Allison Special AI", "AI" },
+            { "Allison Info", "AI" },
+            { "Allison Basic Action", "AI" },
+            { "Allison Basic AI", "AI" },
+            { "Allison Advanced AI", "AI" },
+            { "Allison Legendary AI", "AI" },
+            { "Allison", "Monster Figurine" },
+
+            { "Allison The Twilight Knight Innovations", "Innovations" },
+            { "Allison The Twilight Knight Bookmarks", "Bookmarks"},
+            { "Bronze Armor", "Armor Sets" },
+            { "Bronzesmith Gear", "Gear" },
+            { "Bronzesmith", "Settlement Locations" },
+
+            { "Allison Watcher", "Monster Figurine" },
+            { "Allison Watcher Info", "AI" },
+            { "Allison Watcher Basic Action", "AI" },
+            { "Allison Watcher Basic AI", "AI" },
+            { "Allison Watcher Special AI", "AI" },
+            { "Allison Watcher Hit Locations", "Hit Locations" },
+        },
+    },
+
+    monsters = {
+        {
+            name = "Allison",
+            nemesis = true,
+            size = { x = 2, y = 2 },
+            rules = { "Allison The Twilight Knight Rules", 4 },
+            resourcesDeck = false,
+            position = "(11.5, 8.5)",
+            playerPositions = { "(10, 16)", "(11, 16)", "(12, 16)", "(13, 16)" },
+            playerRotations = { { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 } },
+            fixedTerrain = {
+                {
+                    terrain = "3 Stone Columns",
+                    positions = { "(10, 6.5)", "(11.5, 5)", "(13, 6.5)" },
+                    rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 90, z = 0 }, { x = 0, y = 180, z = 0 } },
+                },
+                {
+                    terrain = "Mineral Vein",
+                    positions = { "(12, 4)" },
+                    rotations = { { x = 0, y = 180, z = 0 } },
+                },
+            },
+            levels = {
+                {
+                    name = "Level 1",
+                    level = 1,
+                    showdown = {
+                        basic = 8,
+                        advanced = 4,
+                        movement = 6,
+                        toughness = 10,
+                        starting = {
+                            special = { "Will to Survive", "Deadly Invitation", "Out of Your League", "Armored Veteran" }
+                        }
+
+                    },
+                },
+                {
+                    name = "Level 2",
+                    level = 2,
+                    showdown = {
+                        basic = 8,
+                        advanced = 5,
+                        legendary = 1,
+                        movement = 8,
+                        toughness = 12,
+                        speed = 1,
+                        damage = 1,
+                        accuracy = 1,
+                        starting = {
+                            special = { "Will to Survive", "Deadly Invitation", "Out of Your League", "Armored Veteran" }
+                        }
+
+                    },
+                },
+                {
+                    name = "Level 3",
+                    level = 3,
+                    showdown = {
+                        basic = 9,
+                        advanced = 6,
+                        legendary = 2,
+                        movement = 9,
+                        toughness = 13,
+                        speed = 1,
+                        damage = 1,
+                        accuracy = 2,
+                        luck = 1,
+                        starting = {
+                            special = { "Will to Survive", "Deadly Invitation", "Out of Your League", "Armored Veteran" },
+                            misc = { "Indomitable" },
+                        }
+
+                    },
+                },
+                {
+                    name = "Level 4",
+                    level = 4,
+                    showdown = {
+                        basic = 10,
+                        advanced = 8,
+                        legendary = 2,
+                        movement = 9,
+                        toughness = 15,
+                        speed = 2,
+                        damage = 2,
+                        accuracy = 3,
+                        luck = 2,
+                        starting = {
+                            special = { "Will to Survive", "Deadly Invitation", "Out of Your League", "Armored Veteran", "Twilight of Nothingness" },
+                            misc = { "Indomitable" },
+                        }
+                    },
+                },
+            },
+
+        },
+        {
+            name = "Allison Watcher",
+            nemesis = true,
+            size = { x = 2, y = 2 },
+            rules = { "Allison The Twilight Knight Rules", 9 },
+            resourcesDeck = false,
+            advancedAiDeck = false,
+            legendaryAiDeck = false,
+            position = "(11.5, 8.5)",
+            playerPositions = { "(7, 4)", "(16, 4)", "(7, 13)", "(16, 13)" },
+            playerRotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 180, z = 0 },{ x = 0, y = 0, z = 0 },{ x = 0, y = 0, z = 0 } },
+            levels = {
+                {
+                    name = "Level 1",
+                    level = 1,
+                    showdown = {
+                        survivorStatus = { "Retinue", "Retinue", "Retinue", "Retinue" },
+                        starting = {
+                            special = { "Audience", "Lantern Vortex", "Vapor of Nothingness", "Horripilation", "Insatiable", "Unyielding" },
+                            misc = { "Indomitable" },
+                        },
+                        basic = 12,
+                        life = 25,
+                        movement = 0,
+                        toughness = 20,
+                    },
+                },
+            },
+        },
+    },
+}

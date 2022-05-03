@@ -1,0 +1,302 @@
+local Check = require("Kdm/Util/Check")
+local Location = require("Kdm/Location")
+local log = require("Kdm/Log").ForModule("Container")
+local Util = require("Kdm/Util/Util")
+
+---------------------------------------------------------------------------------------------------
+
+local Container = {}
+
+Container.TAGS = {
+    ["Deck"] = true,
+    ["Bag"] = true,
+    ["Infinite"] = true,
+}
+
+local ContainerClass = {}
+ContainerClass.__index = ContainerClass
+function ContainerClass.Is(instance) return getmetatable(instance) == ContainerClass end
+
+---------------------------------------------------------------------------------------------------
+
+function Container.Create(object)
+    assert(Check.ObjectOrNil(object))
+
+    local container  = {
+        tag = "Container",
+        object = object,
+    }
+    setmetatable(container, ContainerClass)
+
+    return container
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Name()
+    if self.object == nil then
+        return "<self destroyed>"
+    end
+
+    return self.object.getName()
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Guid()
+    if self.object == nil then
+        return "<self destroyed>"
+    end
+
+    return self.object.getGUID()
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Object()
+    return self.object
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Objects()
+    if self.object == nil then
+        return {}
+
+    elseif Container.TAGS[self.object.tag] then
+        return self.object.getObjects()
+
+    else
+        return {
+            -- last object
+            {
+                name = self.object.getName(),
+                guid = self.object.getGUID(),
+                gm_notes = self.object.getGMNotes(),
+            },
+        }
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Lock(lock)
+    if self.object == nil then
+        return log:Debugf("Container object destroyed, nothing to lock")
+    end
+
+    self.object.setLock(lock)
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Take(params)
+    assert(Check.Table(self))
+    assert(self.object != nil, "Container is empty or was destroyed")  -- "!= nil" is important for deleted TTS object comparison
+
+    local guid = params.guid
+
+    local name = params.name
+    local type = params.type
+    if name then
+        assert(Check(type, "Name '%s' provided, but no type", name))
+    end
+
+    assert(Check(not guid or not name, "Can't have both guid (%s) and name (%s)", guid, name))
+
+    local location = params.location
+    local position = params.position
+    if location then
+        location = Location.Get(location)
+        position = location:Center()
+        position.y = position.y + (params.height or 2)
+    else
+        assert(position, "Either location or position is required")
+    end
+
+    local spawnFunc = params.spawnFunc
+    local rotation = params.rotation or { x = 0, y = 180, z = 0 }
+
+    log:Debugf("Taking %s/%s from self [%s] %s to (%f, %f, %f)", name or "<top>", type or "<???>", self.object.getGUID(), self.object.getName(), position.x, position.y, position.z)
+
+    if not Container.TAGS[self.object.tag] then
+        local lastObject = self.object
+        if name then
+            assert(Check(lastObject.getName() == name and lastObject.getGMNotes() == type, "Couldn't take %s/%s from self; last remaining object is %s/%s", name, type, lastObject.getName(), lastObject.getGMNotes()))
+        end
+
+        lastObject.setPositionSmooth(position, false, true)
+        lastObject.setRotation(rotation)
+        log:Debugf("Took last object [%s] %s", lastObject.getName(), lastObject.getGUID())
+
+        self.object = nil
+
+        if params.spawnFunc then
+            params.spawnFunc(lastObject)
+        end
+        return lastObject
+    end
+
+    if name then
+        assert(guid == nil)
+        for _, entry in ipairs(self.object.getObjects()) do
+            if entry.name == name and entry.gm_notes == type then
+                guid = entry.guid
+                break
+            end
+        end
+        if not guid then
+            log:Debugf("%s/%s not found in self [%s] %s", name, type, self.object.getGUID(), self.object.getName())
+            return nil
+        end
+    end
+
+    local object = self.object.takeObject({
+        guid = guid,
+        position = position,
+        rotation = rotation,
+        smooth = false,
+        callback_function = params.spawnFunc,
+    })
+    assert(Check(object, "Couldn't take %s/%s from self [%s] %s", name or "<top>", type or "<???>", self.object.getGUID(), self.object.getName()))
+    log:Debugf("Took [%s] %s from self [%s] %s", object.getName(), object.getGUID(), self.object.getGUID(), self.object.getName())
+
+    if self.object.remainder then
+        self.object = self.object.remainder
+        log:Debugf("Container has only one object remaining, switching to [%s] %s", self.object.getGUID(), self.object.getName())
+    end
+
+    return object
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Shuffle()
+    if Container.TAGS[self.object.tag] then
+        self.object.Shuffle()
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Delete(names)
+    if #names == 0 then
+        return
+    end
+
+    log:Debugf("Deleting %d objects from [%s] %s", #names, self.object.getGUID(), self.object.getName())
+
+
+    local index = nil
+    if Container.TAGS[self.object.tag] then
+        index = Util.MultiIndex(self.object.getObjects(), "name")
+    end
+
+    for i, name in ipairs(names) do
+        -- Single card
+        if not Container.TAGS[self.object.tag] then
+            assert(Check(i == #names))
+
+            local lastObject = self.object
+            assert(Check(lastObject.getName() == name, "Couldn't delete %s from self; last remaining object is %s", name, lastObject.getName()))
+
+            log:Debugf("Deleted last object [%s] %s", lastObject.getName(), lastObject.getGUID())
+            lastObject.destruct()
+            self.object = nil
+
+        -- Legit self (still possible with only one object)
+        else
+            assert(Check(index[name] and #index[name] >= 1, "%s not found in [%s] %s", name, self.object.getGUID(), self.object.getName()))
+            local entry = table.remove(index[name])
+            self.object.takeObject({
+                guid = entry.guid,
+                position = { x = -150, y = -100, z = 150 },
+                smooth = false,
+            }).destruct()
+
+            log:Debugf("Deleted %s from self [%s] %s", name, self.object.getGUID(), self.object.getName())
+
+            if self.object.remainder then
+                self.object = self.object.remainder
+                log:Debugf("Container has only one object remaining, switching to [%s] %s", self.object.getGUID(), self.object.getName())
+            end
+        end
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:OrderDeck(top, bottom)
+    assert(Check(self.object.tag == "Deck"))
+
+    log:Debugf("Reordering [%s] %s with top=%s and bottom=%s", self.object.getGUID(), self.object.getName(), top, bottom)
+
+    local data = self.object.getData()
+    local oldSequence = data.ContainedObjects
+
+    local index = {}
+    for i, elem in ipairs(oldSequence) do
+        if not index[elem.Nickname] then
+            index[elem.Nickname] = { i }
+        else
+            table.insert(index[elem.Nickname], i)
+        end
+    end
+
+    local newSequence = {}
+    for _, card in ipairs(top or {}) do
+        local t = index[card]
+        assert(Check(t and #t > 0, "Deck [%s] %s doesn't have card %s", self.object.getGUID(), self.object.getName(), card))
+        local i = t[#t]
+        table.insert(newSequence, oldSequence[i])
+        oldSequence[i] = "-"
+        table.remove(t)
+    end
+
+    local newBottom = {}
+    for _, card in ipairs(bottom or {}) do
+        local t = index[card]
+        assert(Check(t and #t > 0, "Deck [%s] %s doesn't have card %s", self.object.getGUID(), self.object.getName(), card))
+        local i = t[#t]
+        table.insert(newBottom, oldSequence[i])
+        oldSequence[i] = "-"
+        table.remove(t)
+    end
+
+    for _, elem in ipairs(oldSequence) do
+        if elem != "-" then
+            table.insert(newSequence, elem)
+        end
+    end
+
+    for i = #newBottom, 1, -1 do
+        table.insert(newSequence, newBottom[i])
+    end
+
+    data.DeckIDs = {}
+    for _, elem in ipairs(newSequence) do
+        table.insert(data.DeckIDs, elem.CardID)
+    end
+    data.ContainedObjects = newSequence
+
+    self.object.destruct()
+    local newObject = spawnObjectData({ data = data })
+    log:Debugf("Reordered and respawned deck [%s] %s", newObject.getName(), newObject.getGUID())
+    self.object = newObject
+end
+
+---------------------------------------------------------------------------------------------------
+
+function ContainerClass:Destruct()
+    if self.object then
+        log:Debugf("Destroying conbtainer [%s] %s", self.object.getGUID(), self.object.getName())
+        self.object.destruct()
+        self.object = nil
+    else
+        log:Debugf("Cannot destroy self: already empty/destroyed")
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+return Container.Create

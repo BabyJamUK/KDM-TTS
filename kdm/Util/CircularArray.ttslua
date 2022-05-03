@@ -1,0 +1,74 @@
+local CircularArrayClass = {}
+CircularArrayClass.__index = CircularArrayClass
+
+---------------------------------------------------------------------------------------------------
+
+local function CircularArray_Create(capacity)
+    assert(capacity > 0)
+
+    local circularArray = {
+        tag = "CircularArray",
+        head = 1,
+        tail = 1,
+        capacity = capacity,
+        array = {}
+    }
+    setmetatable(circularArray, CircularArrayClass)
+    return circularArray
+end
+
+---------------------------------------------------------------------------------------------------
+
+function CircularArrayClass.Size(ca)
+    if ca.head >= ca.tail then
+        return (ca.head - ca.tail)
+    else
+        return(ca.tail - ca.head)
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function CircularArrayClass.Top(ca)
+    assert(ca.head != ca.tail, "Circular array is empty")
+    if ca.head > 1 then
+        return ca.array[ca.head - 1]
+    else
+        return ca.array[ca.capacity]
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function CircularArrayClass.Push(ca, value)
+    ca.array[ca.head] = value
+
+    ca.head = ca.head + 1
+    if ca.head == ca.capacity then
+        ca.head = 1
+    end
+
+    if ca.head == ca.tail then
+        ca.array[ca.tail] = nil
+        ca.tail = ca.tail + 1
+        if ca.tail == ca.capacity then
+            ca.tail = 1
+        end
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function CircularArrayClass.Pop(ca)
+    assert(ca.head != ca.tail, "Circular array is empty")
+
+    ca.head = ca.head - 1
+    if ca.head == 0 then
+        ca.head = ca.capacity
+    end
+    ca.array[ca.head] = nil
+end
+
+---------------------------------------------------------------------------------------------------
+
+return CircularArray_Create

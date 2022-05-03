@@ -1,0 +1,199 @@
+return {
+    name = "King's Coin",
+
+    guidNames = { ["34781f"] =  "King's Coin Archive" },
+
+    components = {
+        ["Rare Gear"] = "King's Coin Rare Gear",
+        ["Abilities"] = "Master Of The Curse",
+        ["Strange Resources"] = "King's Coin Strange Resources",
+        ["Disorders"] = "Miserly",
+        ["Terrain"] = "King's Coin Terrain",
+        ["Terrain Tiles"] = { "Shiny Somethings", "King's Merchant" },
+        ["Settlement Events"] = "King's Merchant",
+        ["Settlement Locations"] = "The Emporium",
+        ["Hunt Events"] = "Fragrant Smog",
+    },
+
+    archiveOverrides = {
+        newArchive = "King's Coin Archive",
+        oldArchive = "Core Archive",
+        entries = {
+        --{ "King's Man Special AI", "AI" },
+        { "The Hand Special AI", "AI" },
+        --{ "King's Man Hit Locations", "Hit Locations" },
+        --{ "Core Rare Gear", "Gear" },
+        --{ "Core Rules", "Rulebook" },
+        }
+    },
+
+    settlementEvents = {
+        "King's Merchant",
+    },
+
+    terrain = {
+        ["Shiny Somethings"] = { terrainTile = "Shiny Somethings", count = 1 },
+        ["King's Merchant"] = { terrainTile = "King's Merchant", count = 1 },
+    },
+
+    terrainTileSizes = {
+        ["Shiny Somethings"] = { x = 1, y = 1 },
+        ["King's Merchant"] = { x = 3, y = 2 },
+    },
+
+    settlementLocationGear = {
+        ["The Emporium"] = "King's Coin Gear",
+    },
+
+    armorStats = {
+        ["Gilded Crown"]            = { head = 3, arms = 0, body = 0, waist = 0, legs = 0 },
+        ["Acid Stained Shield"]     = { head = 1, arms = 1, body = 1, waist = 1, legs = 1, modifier = true },
+        ["Regal Helm (KC)"]         = { head = 4, arms = 0, body = 0, waist = 0, legs = 0 },
+        ["Regal Plackart (KC)"]     = { head = 0, arms = 0, body = 4, waist = 0, legs = 0 },
+        ["Regal Gauntlets (KC)"]    = { head = 0, arms = 4, body = 0, waist = 0, legs = 0 },
+        ["Regal Greaves (KC)"]      = { head = 0, arms = 0, body = 0, waist = 0, legs = 4 },
+        ["Regal Faulds (KC)"]       = { head = 0, arms = 0, body = 0, waist = 4, legs = 0 },
+    },
+
+    weaponStats = {
+        ["Carving Knife"]            = { speed = 2, accuracy = 6, strength = 4 },
+        ["Horned Shield"]            = { speed = 1, accuracy = 4, strength = 6 },
+        ["Diversion Blade"]          = { speed = 2, accuracy = 7, strength = 5, savage = true },
+        ["Spiderbite Daggers"]       = { speed = 4, accuracy = 7, strength = 4 },
+        ["Shortbow"]                 = { speed = 2, accuracy = 6, strength = 8 },
+        ["Stone Hammer"]             = { speed = 2, accuracy = 5, strength = 7 },
+        ["Dagger Of Denial"]         = { speed = 2, accuracy = 6, strength = 5 },
+        ["Exotic Saber"]             = { speed = 3, accuracy = 5, strength = 5, sharp = true },
+        ["Acid Stained Shield"]      = { speed = 2, accuracy = 6, strength = 4, deadly = 1 },
+    },
+
+    archiveEntries = {
+        archive = "King's Coin Archive",
+        entries = {
+            { "King's Coin Rules", "Rulebook" },
+            { "Miserly", "Disorders" },
+            { "Master Of The Curse", "Abilities" },
+            { "King's Coin Strange Resources", "Strange Resources" },
+            { "King's Coin Terrain", "Terrain" },
+            { "King's Merchant", "Terrain Tiles" },
+            { "Shiny Somethings", "Terrain Tiles" },
+            { "King's Coin Rare Gear", "Gear" },
+            { "King's Coin Gear", "Gear" },
+            { "Fragrant Smog", "Hunt Events" },
+            { "King's Merchant", "Settlement Events" },
+            { "The Emporium", "Settlement Locations" },
+
+            { "King's Man (KC) Hit Locations", "Hit Locations" },
+            { "King's Man (KC) Special AI", "AI" },
+            { "King's Man (KC) Advanced AI", "AI" },
+            { "King's Man (KC) Basic AI", "AI" },
+            { "King's Man (KC) Info", "AI" },
+            { "King's Man (KC)", "Monster Figurine"},
+            { "King's Man (KC) Basic Action", "AI" },
+
+
+        },
+    },
+
+    monsters = {
+        {
+            name = "King's Man (KC)",
+            nemesis = true,
+            size = { x = 2, y = 2 },
+            rules = { "King's Coin Rules", 2 },
+            resourcesDeck = false,
+            legendaryAiDeck = "Familiar Face",
+            position = "(11.5, 8.5)",
+            playerPositions = { "(10, 16)", "(11, 16)", "(12, 16)", "(13, 16)" },
+            fixedTerrain = {
+                {
+                    terrain = "3 Stone Columns",
+                    positions = { "(10, 6.5)", "(11.5, 4)", "(13, 6.5)" },
+                    rotations = { { x = 0, y = 180, z = 0 }, { x = 0, y = 270, z = 0 }, { x = 0, y = 180, z = 0 } },
+                },
+            },
+            unfixedTerrain = { "Shiny Somethings", "2 Cowering Survivors", "King's Merchant" },
+            levels = {
+                {
+                    name = "Level 1",
+                    level = 1,
+                    showdown = {
+                        survivorStatus = { "Battle Tempo", "Battle Tempo", "Battle Tempo", "Battle Tempo" },
+                        starting = {
+                            special = { "Weak Spot", "King's Combat", "King's Aura", "Out-Fighting" },
+                        },
+                        basic = 10,
+                        advanced = 2,
+                        miscHitLocations = { "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        topHitLocationCards = { "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        movement = 5,
+                        toughness = 12,
+                    },
+                },
+                {
+                    name = "Level 2",
+                    level = 2,
+                    showdown = {
+                        survivorStatus = { "Battle Tempo", "Battle Tempo", "Battle Tempo", "Battle Tempo" },
+                        starting = {
+                            special = { "Weak Spot", "King's Combat", "King's Aura", "Out-Fighting", "Silent Hymn", "Ensemble" },
+                        },
+                        basic = 11,
+                        advanced = 4,
+                        legendary = 1,
+                        miscHitLocations = { "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        topHitLocationCards = { "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        movement = 6,
+                        toughness = 15,
+                        speed = 1,
+                        damage = 1,
+                    },
+                },
+                {
+                    name = "Level 3",
+                    level = 3,
+                    showdown = {
+                        survivorStatus = { "Battle Tempo", "Battle Tempo", "Battle Tempo", "Battle Tempo" },
+                        starting = {
+                            special = { "Weak Spot", "King's Combat", "King's Aura", "Out-Fighting", "Silent Hymn", "Ensemble" },
+                            misc = { "Indomitable" },
+                        },
+                        basic = 12,
+                        advanced = 6,
+                        legendary = 1,
+                        miscHitLocations = { "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        topHitLocationCards = { "Battle Pressure", "Battle Pressure", "Battle Pressure" },
+                        movement = 6,
+                        toughness = 18,
+                        speed = 2,
+                        damage = 2,
+                        accuracy = 2,
+                    },
+                },
+            },
+        },
+    },
+
+    rulebooks = {
+        {
+            name  = "King's Coin Rules",
+            pages = {
+                ["King's Coin Rules"] = {
+                    keywords = { "King's","Coin","Rules" },
+                    state = 1,
+                },
+
+                ["Showdown: King's Man (KC)"] = {
+                    keywords = { "Showdown:","King's","Man","KC" },
+                    state = 2,
+                    showdown = true,
+                },
+
+                ["Highway Robbery"] = {
+                    keywords = { "Highway","Robbery" },
+                    state = 3,
+                },
+            },
+        },
+    }
+}

@@ -1,0 +1,66 @@
+local Check = require("Kdm/Util/Check")
+local Expansion = require("Kdm/Expansion")
+
+---------------------------------------------------------------------------------------------------
+
+local Armor = {}
+Armor.__index = Armor
+
+---------------------------------------------------------------------------------------------------
+
+function Armor.Init(saveState)
+    Armor.armor = {}
+    for _, expansion in ipairs(Expansion.All()) do
+        for name, stats in pairs(expansion.armorStats or {}) do
+            if Armor.armor[name] then
+                assert(false, string.format("Armor %s was already registered by expansion %s", name, Armor.armor[name].expansion))
+            end
+            Armor.armor[name] = Armor.Create(name, expansion.name, stats)
+        end
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Armor.Get(armor)
+    return Armor.armor[armor]
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Armor.Create(name, expansion, stats)
+    assert(Check.Str(name))
+    assert(Check.Str(expansion))
+    assert(Check.Num(stats.head))
+    assert(Check.Num(stats.arms))
+    assert(Check.Num(stats.body))
+    assert(Check.Num(stats.waist))
+    assert(Check.Num(stats.legs))
+
+    local armor = {
+        name = name,
+        expansion = expansion,
+        head = stats.head,
+        arms = stats.arms,
+        body = stats.body,
+        waist = stats.waist,
+        legs = stats.legs,
+        modifier = stats.modifier,
+    }
+    setmetatable(armor, Armor)
+
+    return armor
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Armor:__tostring()
+    return string.format("%s (%d/%d/%d/%d/%d)", self.name, self.head, self.arms, self.body, self.waist, self.legs)
+end
+
+---------------------------------------------------------------------------------------------------
+
+return {
+    Init = Armor.Init,
+    Get = Armor.Get,
+}

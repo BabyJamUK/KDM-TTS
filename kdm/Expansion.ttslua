@@ -1,0 +1,138 @@
+local Check = require("Kdm/Util/Check")
+
+---------------------------------------------------------------------------------------------------
+
+local Core = require("Kdm/Expansion/Core")
+local CommunityEdition = require("Kdm/Expansion/CommunityEdition")
+local DragonKing = require("Kdm/Expansion/DragonKing")
+local DungBeetleKnight = require("Kdm/Expansion/DungBeetleKnight")
+local FlowerKnight = require("Kdm/Expansion/FlowerKnight")
+local Gorm = require("Kdm/Expansion/Gorm")
+local LionGod = require("Kdm/Expansion/LionGod")
+local LionKnight = require("Kdm/Expansion/LionKnight")
+local LonelyTree = require("Kdm/Expansion/LonelyTree")
+local Manhunter = require("Kdm/Expansion/Manhunter")
+local Slenderman = require("Kdm/Expansion/Slenderman")
+local Spidicules = require("Kdm/Expansion/Spidicules")
+local Sunstalker = require("Kdm/Expansion/Sunstalker")
+local CcgHomebrew = require("Kdm/Expansion/CcgHomebrew")
+local ForsakerSisters = require("Kdm/Expansion/ForsakerSisters")
+local StormKnight = require("Kdm/Expansion/StormKnight")
+local KingsCoin = require("Kdm/Expansion/KingsCoin")
+local DrifterKnight = require("Kdm/Expansion/DrifterKnight")
+local AllisonTheTwilightKnight = require("Kdm/Expansion/AllisonTheTwilightKnight")
+local TracksOfDeath = require("Kdm/Expansion/TracksOfDeath")
+local HarvesterWorm = require("Kdm/Expansion/HarvesterWorm")
+
+---------------------------------------------------------------------------------------------------
+
+local Expansion = {}
+
+---------------------------------------------------------------------------------------------------
+
+function Expansion.Init(saveState)
+    Expansion.allExpansions = {
+        Core,
+        --CommunityEdition,
+        DragonKing,
+        DungBeetleKnight,
+        FlowerKnight,
+        Gorm,
+        LionGod,
+        LionKnight,
+        LonelyTree,
+        Manhunter,
+        Slenderman,
+        Spidicules,
+        Sunstalker,
+        --CcgHomebrew,
+        ForsakerSisters,
+        StormKnight,
+        KingsCoin,
+        DrifterKnight,
+        AllisonTheTwilightKnight,
+        TracksOfDeath,
+        HarvesterWorm,
+    }
+
+    Expansion.expansionsByName = {}
+    for _, expansion in ipairs(Expansion.allExpansions) do
+        Expansion.expansionsByName[expansion.name] = expansion
+    end
+
+    Expansion.unlockedMode = saveState.unlockedMode
+
+    Expansion.enabledByExpansionName = {}
+    for _, name in ipairs(saveState.enabledExpansions or {}) do
+        local expansion = Expansion.expansionsByName[name]
+        assert(Check(expansion, "Expansion save state had unknown expansion %s", name))
+        Expansion.enabledByExpansionName[name] = true
+    end
+    Expansion.enabledByExpansionName["Core"] = true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Expansion.Save()
+    local enabledExpansions = {}
+    for name, enabled in pairs(Expansion.enabledByExpansionName) do
+        if enabled then
+            table.insert(enabledExpansions, name)
+        end
+    end
+
+    return {
+        enabledExpansions = enabledExpansions,
+        unlockedMode = Expansion.unlockedMode,
+    }
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Expansion.All()
+    return Expansion.allExpansions
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Expansion.SetEnabled(enabledByExpansionName)
+    Expansion.enabledByExpansionName = {}
+    assert(Check.Table(enabledByExpansionName))
+    for expansionName, enabled in pairs(enabledByExpansionName) do
+        assert(Check.Str(expansionName))
+        assert(Check.BooleanOrNil(enabled))
+        Expansion.enabledByExpansionName[expansionName] = enabled
+    end
+    Expansion.enabledByExpansionName["Core"] = true
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Expansion.IsEnabled(expansionName)
+    assert(Check.Str(expansionName))
+    return Expansion.enabledByExpansionName[expansionName]
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Expansion.SetUnlockedMode(unlockedMode)
+    Expansion.unlockedMode = unlockedMode
+end
+
+---------------------------------------------------------------------------------------------------
+
+function Expansion.IsUnlockedMode()
+    return Expansion.unlockedMode
+end
+
+---------------------------------------------------------------------------------------------------
+
+return {
+    Init = Expansion.Init,
+    Save = Expansion.Save,
+    All = Expansion.All,
+    SetEnabled = Expansion.SetEnabled,
+    IsEnabled = Expansion.IsEnabled,
+    SetUnlockedMode = Expansion.SetUnlockedMode,
+    IsUnlockedMode = Expansion.IsUnlockedMode,
+}

@@ -1,0 +1,75 @@
+local Check = require("Kdm/Util/Check")
+
+---------------------------------------------------------------------------------------------------
+
+local EventManager = {}
+
+EventManager.ON_SURVIVOR_DESTROYED = "onSurvivorDestroyed"
+EventManager.ON_SURVIVOR_STAT_CHANGED = "onSurvivorStatChanged"
+EventManager.ON_SURVIVOR_CARDS_CHANGED = "onSurvivorCardsChanged"
+EventManager.ON_PLAYER_SURVIVOR_LINKED = "onPlayerSurvivorLinked"
+EventManager.ON_PLAYER_SURVIVOR_UNLINKED = "onPlayerSurvivorUnlinked"
+EventManager.ON_PLAYER_WEAPONS_CHANGED = "onPlayerWeaponsChanged"
+EventManager.ON_PLAYER_COLOR_CHANGED = "onPlayerColorChanged"
+EventManager.ON_SHOWDOWN_STARTED = "onShowdownStart"
+EventManager.ON_SHOWDOWN_ENDED = "onShowdownEnded"
+EventManager.ON_MONSTER_STAT_CHANGED = "onMonsterStatChanged"
+EventManager.ON_SURVIVOR_GETS_IN_PLAY = "onSurvivorGetsInPlay"
+EventManager.ON_SURVIVOR_BACK_TO_SETTLEMENT = "onSurvivorBackToSettlement"
+
+EventManager.handlers = {}
+EventManager.globalHandlers = {}
+
+---------------------------------------------------------------------------------------------------
+
+function EventManager.AddHandler(event, handler)
+    assert(Check.Str(event))
+    assert(Check.Func(handler))
+
+    local handlers = EventManager.handlers[event]
+    if handlers then
+        table.insert(handlers, handler)
+        return
+    end
+
+    EventManager.globalHandlers[event] = _G[event]
+
+    _G[event] = function(...)
+        local globalHandler = EventManager.globalHandlers[event]
+        local returnValue
+        if globalHandler then
+            returnValue = globalHandler(...)
+        end
+
+        local args = table.pack(...)
+        local n = #args
+        table.insert(args, returnValue)
+        for _, handler in ipairs(EventManager.handlers[event]) do
+            args[n + 1] = returnValue
+            returnValue = handler(table.unpack(args))
+        end
+
+        return returnValue
+    end
+
+    EventManager.handlers[event] = { handler }
+end
+
+---------------------------------------------------------------------------------------------------
+
+function EventManager.FireEvent(event, ...)
+    assert(Check.Str(event))
+
+    local globalHandler = EventManager.globalHandlers[event]
+    if globalHandler then
+        globalHandler(...)
+    end
+
+    for _, handler in ipairs(EventManager.handlers[event] or {}) do
+        handler(...)
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+
+return EventManager
