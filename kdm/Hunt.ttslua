@@ -6,6 +6,7 @@ local Location = require("Kdm/Location")
 local log = require("Kdm/Log").ForModule("Hunt")
 local Ui = require("Kdm/Ui")
 local Util = require("Kdm/Util/Util")
+local Showdown = require("kdm/Showdown")
 
 ---------------------------------------------------------------------------------------------------
 
@@ -35,6 +36,7 @@ function Hunt.Init()
                     huntEventsDeck = monster.huntEventsDeck or monster.name.." Hunt Events",
                     levels = levels,
                     levelMap = levelMap,
+                    monsterEventandAbility = monster.monsterEventandAbility,
                 }
                 if monster.resourcesDeck != false then
                     huntSetup.resourcesDeck = monster.resourcesDeck or monster.name.." Resources"
@@ -95,7 +97,6 @@ function Hunt.Init()
                 return log:Broadcastf("Requires %s expansion.", expansion.name)
             end
         end
-
 
         log:Debugf("Begin hunt clicked for monster %s, level %s", Hunt.monster.name, Hunt.level.level)
         Hunt.HideUi(player)
@@ -198,11 +199,15 @@ function Hunt.Setup(monsterOrName, levelOrName)
         monsterResourcesDeck.shuffle()
     end
 
+    local cardGuids = {}
+    local x = 0
     for i, c in ipairs(monster.huntTrack) do
         if c == 'H' then
             huntEventsDeck:Take({ location = "Hunt Track "..i, rotation = { x = 0, y = 180, z = 180 } })
         elseif c == 'M' then
-            monsterHuntEventsDeck:Take({ location = "Hunt Track "..i, rotation = { x = 0, y = 180, z = 180 } })
+          x = x + 1
+          local mhec = monsterHuntEventsDeck:Take({ location = "Hunt Track "..i, rotation = { x = 0, y = 180, z = 180 } })
+          cardGuids[x] = mhec
         elseif c == 'O' then
             -- Overwhelming Darkness, no card
         elseif c == 'F' then
@@ -229,7 +234,10 @@ function Hunt.Setup(monsterOrName, levelOrName)
         rotation = { x = 0, y = 90, z =0 },
     })
 
+
     Archive.Clean()
+
+    monsterFigurine.addContextMenuItem("Begin Showdown", function() BeginShowdown(cardGuids, monster, level) end)
 
     log:Printf("Hunt ready. May your lanterns guide you in the darkness.")
 
@@ -239,6 +247,44 @@ function Hunt.Setup(monsterOrName, levelOrName)
 end
 
 ---------------------------------------------------------------------------------------------------
+
+
+function BeginShowdown(cardGuids, monster, level)
+  local monsterStartingAbilities = {}
+  local x = 0
+  for i, c in ipairs(cardGuids) do
+    if not c.is_face_down then
+      local card = c.getName()
+      for _, e in ipairs(monster.monsterEventandAbility) do
+        if card == e.name then
+          x = x + 1
+            if e.needsDice == true then
+              --Can't get dice to work so just using Math Random for now
+              --local huntDice = getObjectFromGUID("de2e16")
+              --huntDice.setPositionSmooth(vector(-94.93, 3.78, -2.88), false, true)
+              --huntDice.randomize()
+              --local result = huntDice.getValue()
+              --local result = math.random(1, 10)
+              --log:Printf("result of roll is %s", result)
+              --if result <= e.dRangeMax and result >= e.dRangeMin then
+
+              --removed Math.Random will turn card face down manually if not impacted by it
+                --log:Printf("We need to do something with %s %s", e.name, e.ability)
+                monsterStartingAbilities[x] = e
+              --end
+              --huntDice.setPositionSmooth(vector(-111.25, 3.15, 36.04), false, true)
+            else
+              --log:Printf("We need to do something with %s %s", e.name, e.ability)
+              monsterStartingAbilities[x] = e
+            end
+        end
+      end
+    end
+  end
+  Hunt.Clean()
+  Showdown.Init(false, monster, level, monsterStartingAbilities)
+  log:Printf("Moved from Hunt to Showdown")
+end
 
 function Hunt.ShowUi(player)
     log:Debugf("Showing Hunt UI for " .. player.steam_name)

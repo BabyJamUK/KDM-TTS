@@ -23,10 +23,16 @@ Showdown.MAX_TERRAIN = 10
 
 ---------------------------------------------------------------------------------------------------
 
-function Showdown.Init()
+function Showdown.Init(fromHunt, monster, level, startingAbilities)
     Showdown.settingUp = false
     Showdown.InitExpansions()
-    Showdown.InitUi()
+    if monster == nil then
+      --log:Printf("In If on Showdown")
+      Showdown.InitUi()
+    else
+      --log:Printf("In else on Showdown")
+      Showdown.Setup(monster.name, level.name, startingAbilities)
+    end
     Showdown.InitOverlay()
 
     EventManager.AddHandler("onObjectPickUp", Showdown.OnObjectPickUp)
@@ -238,7 +244,7 @@ end
 
 -------------------------------------------------------------------------------------------------
 
-function Showdown.Setup(monsterOrName, levelOrName)
+function Showdown.Setup(monsterOrName, levelOrName, startingAbilities)
     if Showdown.settingUp then
         log:Errorf("Showdown setup currently in progress, please wait until finished before setting up another hunt. If the showdown appears to be stuck, click 'Cleanup Showdown' from the 'Cleanup' menu to reset.")
         return
@@ -355,6 +361,11 @@ function Showdown.Setup(monsterOrName, levelOrName)
             return log:Errorf("Not enough trait/mood slots for starting card %s from deck %s; please place this card manually", card, deck)
         end
         return deck:Take({ name = card, type = "AI", location = location })
+    end
+
+
+    for _, a in ipairs(startingAbilities) do
+          AddStartingCard(a.ability, advancedAiDeck)
     end
 
     -- starting cards
@@ -721,7 +732,7 @@ end
 
 --Collect 1 Endevour per surviving player
 --Todo: Check if you need more endevours from other events (Innvovation as example)
-	local endToken = getObjectFromGUID("0a593b")
+	local endToken = getObjectFromGUID("8c7f61")
  x = 52.45
 	for i = nonDeadCount, 1, -1
 	do

@@ -1478,6 +1478,7 @@ return {
             size = { x = 2, y = 2 },
             rules = { "Core Rules", 89 },
             huntTrack = { "M", "M", "H", "H", "M", "O", "H", "M", "M", "H", "H" },
+            monsterEventandAbility = { {name="White Lion Cub", ability="Enraged", needsDice=true, dRangeMin=1, dRangeMax=3, deck="advancedAiDeck"}, {name="Prowling Lion", ability="Ground Fighting", needsDice=false, dRangeMin=0, dRangeMax=0, deck="advancedAiDeck"} },
             position = "(11.5, 8.5)",
             playerPositions = { "(10, 14)", "(11, 15)", "(12, 15)", "(13, 14)" },
             fixedTerrain = {

@@ -1,4 +1,4 @@
-KDM_VERSION = "1.4.7"
+KDM_VERSION = "1.4.8"
 
 GLOBAL_OBJECT = self
 
@@ -58,7 +58,6 @@ function onLoad(saveJson)
     Log.Init(e)
     log:Printf("BabyJam's Kingdom Death: Monster Mod v%s", KDM_VERSION)
     log:Printf("This mod is a fork of Mei's (Misterslack's and Farbod's mods). Check'em out!")
-    log:Printf("Test to see if this works")
     --
     Armor.Init(e)
     NamedObject.Init(e)
@@ -79,7 +78,7 @@ function onLoad(saveJson)
     --
     Player.Init(saveState.Player or {})
     --
-    Showdown.Init()
+    Showdown.Init(false, nil, nil, nil)
     BattleUi.Init()
     --
     GlobalUi.Init()
