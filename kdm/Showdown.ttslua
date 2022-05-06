@@ -14,6 +14,7 @@ local Rules = require("Kdm/Rules")
 local Terrain = require("Kdm/Terrain")
 local Ui = require("Kdm/Ui")
 local Util = require("Kdm/Util/Util")
+local battleUi = require("kdm/BattleUi")
 
 ---------------------------------------------------------------------------------------------------
 
@@ -126,7 +127,7 @@ function Showdown.InitUi()
 
         log:Debugf("Begin showdown clicked for monster %s, level %s", Showdown.monster.name, Showdown.level.name)
         Showdown.HideUi(player)
-        Showdown.Setup(Showdown.monster, Showdown.level)
+        Showdown.Setup(Showdown.monster, Showdown.level, nil)
     end })
 
     panel:Button({ id = "Clean", x = 183, y = -552, width = 301, height = 60, onClick = function(mouseButton, player)
@@ -363,9 +364,10 @@ function Showdown.Setup(monsterOrName, levelOrName, startingAbilities)
         return deck:Take({ name = card, type = "AI", location = location })
     end
 
-
-    for _, a in ipairs(startingAbilities) do
-          AddStartingCard(a.ability, advancedAiDeck)
+    if not startingAbilities == nil then
+      for _, a in ipairs(startingAbilities) do
+            AddStartingCard(a.ability, advancedAiDeck)
+      end
     end
 
     -- starting cards
@@ -632,8 +634,13 @@ function Showdown.Setup(monsterOrName, levelOrName, startingAbilities)
 
     --add context menu to monster figure for players winResources
 		mFigure.addContextMenuItem("Players win", function() playersWin(monsterResourcesDeck, winMResources, winResources, winSResources, mFigure, winHuntXP, winWepPro ) end)
+    --add context menu to end monster turn, this will be used to check if players should stand
+    --eventually I want to put this in the BattleUi when I figure it out
+    mFigure.addContextMenuItem("End Monster Turn", function() endMonsterTurn(monster.name) end)
 
     Showdown.settingUp = false
+    _G.CurrentRound = 1
+    _G.WhosTurn = "Monster"
     Wait.frames(function() log:Printf("Showdown ready. Adjust your survivor/terrain placement and prepare for death.") end, 120)
 
     --Location.Get("(11.5, 8.5)"):LookAt({ distance = 90 })
@@ -643,8 +650,31 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
+function endMonsterTurn(name)
+  --log:Printf("%s turn has ended, checking if knocked down players can stand", name)
+
+  for i, player in ipairs(Player.Players()) do
+    local survivor = player.survivorSheet:Survivor()
+    local figurine = player:FigurineObject()
+    if player.isKnocked == false then
+      if figurine.is_face_down then
+        --log:Printf("%s was knocked during round %s on %s turn", survivor.name, _G.CurrentRound, _G.WhosTurn)
+        player.isKnocked = true
+      end
+    else
+      if figurine.is_face_down then
+        figurine.flip()
+        player.isKnocked = false
+      end
+    end
+  end
+
+  _G.WhosTurn = "Players"
+  --log:Printf("It's currently the %s turn", _G.WhosTurn)
+end
+
+
 function playersWin(monsterResourcesDeck, winMResources, winResources, winSResources, mFigure, winHuntXP, winWepPro)
-  --Some logic here
 	monsterResourcesDeck.shuffle()
 
 	--Monster resources
@@ -742,6 +772,8 @@ end
 		})
 		x = x + 2
 	end
+
+  battleUi.ResetRound()
 
 end
 

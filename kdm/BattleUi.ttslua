@@ -11,7 +11,7 @@ local Util = require("Kdm/Util/Util")
 
 ---------------------------------------------------------------------------------------------------
 
-local BattleUi = {}
+BattleUi = {}
 
 BattleUi.MAX_WEAPONS = 3
 BattleUi.PLAYER_SPACING = 0
@@ -19,6 +19,8 @@ BattleUi.TEXT_COLOR = "#ffffffdc"
 BattleUi.DISABLED_TEXT_COLOR = "#ffffff60"
 BattleUi.DARK_COLORS = "#00000000|#ffffff10|#ffffff20|#ffffffff"
 BattleUi.DARK_SELECTED_COLORS = "#ffffff20|#ffffff30|#ffffff40|#ffffffff"
+_G.CurrentRound = 1
+_G.WhosTurn = "Monster"
 
 ---------------------------------------------------------------------------------------------------
 
@@ -330,8 +332,20 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
+function BattleUi:UpdateRoundDetails(turn)
+  BattleUi.WhosTurn = turn
+end
+
+function BattleUi:ResetRound()
+  BattleUi.CurrentRound = 1
+end
+
+
 function BattleUi.NextTurn()
-    log:Printf("Starting next turn")
+    _G.CurrentRound = _G.CurrentRound + 1
+
+    log:Printf("Starting Round %s", _G.CurrentRound)
+    log:Printf("It's currently the %s turn", _G.WhosTurn)
 
     local monsterControllerObject = nil
     local monsterControllerPlayer = nil
@@ -340,6 +354,14 @@ function BattleUi.NextTurn()
     for i, _ in ipairs(players) do
         local playerPrefix = "Player "..i
         local survivalTokens = Location.Get(playerPrefix.." Survival Tokens"):AllObjects("Survival Tokens")
+        local survivor = _.survivorSheet:Survivor()
+        local figurine = _:FigurineObject()
+        if _.isKnocked == false then
+          if figurine.is_face_down then
+            --log:Printf("%s was knocked during round %s on %s turn", survivor.name, _G.CurrentRound, _G.WhosTurn)
+            _.isKnocked = true
+          end
+        end
         for _, token in ipairs(survivalTokens) do
             rot = token.getRotation()
             if rot.z >= 15 and rot.z <= 345    then
@@ -386,6 +408,7 @@ function BattleUi.NextTurn()
     else
         log:Debugf("No monster controller found")
     end
+        _G.WhosTurn = "Monster"
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -408,4 +431,10 @@ return {
     Init = BattleUi.Init,
     PostInit = BattleUi.PostInit,
     Save = BattleUi.Save,
+    UpdateRoundDetails = BattleUi.UpdateRoundDetails,
+    ResetRound = BattleUi.ResetRound,
+    GetCurrentRound = function() return BattleUi.CurrentRound end,
+    GetWhosTurn = function() return BattleUi.WhosTurn end,
+    CurrentRound = BattleUi.CurrentRound,
+    WhosTurn = BattleUi.WhosTurn,
 }
